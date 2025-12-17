@@ -397,7 +397,7 @@ const styles = `
       z-index: 3;
     }
     100% { 
-      transform: rotateX(180deg) translateY(-33.34%) translateZ(20px) scaleY(0.85);
+      transform: rotateX(180deg) translateY(-33.34%) translateZ(2px) scaleY(0.85);
       z-index: 3;
     }
   }
@@ -437,7 +437,7 @@ const styles = `
       z-index: 2;
     }
     100% { 
-      transform: rotateX(180deg) translateY(-33.33%) translateZ(20px) scaleY(0.88);
+      transform: rotateX(180deg) translateY(-66.66%) translateZ(4px) scaleY(0.88);
       z-index: 2;
     }
   }

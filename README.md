@@ -2,6 +2,12 @@
 
 A beautiful, nostalgic email client built with React that presents emails as physical letters with realistic animations and interactions.
 
+## 🌐 Live Demo
+
+**Visit the app:** [https://meetr1912.github.io/LetterMail/](https://meetr1912.github.io/LetterMail/)
+
+> **Note:** If the link doesn't work yet, enable GitHub Pages in repository settings: [Settings → Pages → Source: GitHub Actions](https://github.com/meetr1912/LetterMail/settings/pages)
+
 ## Features
 
 - **Physical Letter Design**: Emails are displayed as elegant envelopes with postage stamps and wax seals
@@ -30,7 +36,7 @@ A beautiful, nostalgic email client built with React that presents emails as phy
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/meetr1912/LetterMail.git
 cd LetterMail
 ```
 

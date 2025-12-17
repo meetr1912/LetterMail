@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Search, PenTool, X, Flame, Reply, Send, ArrowLeft, Cloud } from 'lucide-react';
 
@@ -578,65 +578,56 @@ const styles = `
     }
   }
 
-  /* Animate shadow creases appearing as the paper bends - visible tri-fold creases with depth */
+  /* Animate shadow creases appearing as the paper bends - Made very subtle */
   @keyframes creaseAppear {
     0% { 
       opacity: 0; 
       transform: scaleX(0.98) scaleY(1);
-      box-shadow: 0 0 0 rgba(0,0,0,0);
     }
     10% { 
-      opacity: 0.3; 
+      opacity: 0.1; 
       transform: scaleX(0.99) scaleY(0.99);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     15% { 
-      opacity: 0.5; 
+      opacity: 0.15; 
       transform: scaleX(1) scaleY(0.98);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     20% { 
-      opacity: 0.7; 
+      opacity: 0.2; 
       transform: scaleX(1.01) scaleY(0.97);
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
     30% { 
-      opacity: 0.85; 
+      opacity: 0.25; 
       transform: scaleX(1.02) scaleY(0.96);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
     }
     45% { 
-      opacity: 1; 
+      opacity: 0.3; 
       transform: scaleX(1.03) scaleY(0.95);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
     }
     60% { 
-      opacity: 1; 
+      opacity: 0.3; 
       transform: scaleX(1.04) scaleY(0.94);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.35);
     }
     75% { 
-      opacity: 1; 
+      opacity: 0.3; 
       transform: scaleX(1.05) scaleY(0.93);
-      box-shadow: 0 7px 14px rgba(0,0,0,0.4);
     }
     100% { 
-      opacity: 1; 
+      opacity: 0.3; 
       transform: scaleX(1.06) scaleY(0.92);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.45);
     }
   }
   
-  /* Second crease animation - appears later */
+  /* Second crease animation - appears later - Made very subtle */
   @keyframes creaseAppearSecond {
     0% { opacity: 0; transform: scaleX(0.98); }
-    50% { opacity: 0.2; transform: scaleX(0.99); }
-    55% { opacity: 0.4; transform: scaleX(1); }
-    60% { opacity: 0.6; transform: scaleX(1.01); }
-    65% { opacity: 0.75; transform: scaleX(1.02); }
-    75% { opacity: 0.9; transform: scaleX(1.03); }
-    85% { opacity: 1; transform: scaleX(1.04); }
-    100% { opacity: 1; transform: scaleX(1.05); }
+    50% { opacity: 0.05; transform: scaleX(0.99); }
+    55% { opacity: 0.1; transform: scaleX(1); }
+    60% { opacity: 0.15; transform: scaleX(1.01); }
+    65% { opacity: 0.2; transform: scaleX(1.02); }
+    75% { opacity: 0.25; transform: scaleX(1.03); }
+    85% { opacity: 0.3; transform: scaleX(1.04); }
+    100% { opacity: 0.3; transform: scaleX(1.05); }
   }
 
   .folding-active {
@@ -647,19 +638,13 @@ const styles = `
     transform-style: preserve-3d;
   }
 
-  /* Enhanced shadows for folded sections */
+  /* Enhanced shadows for folded sections - Removed heavy shadows that create lines */
   .folding-active .paper-section-1 {
-    box-shadow: 
-      0 -10px 20px rgba(0,0,0,0.3),
-      0 -5px 10px rgba(0,0,0,0.2),
-      inset 0 5px 10px rgba(0,0,0,0.1);
+    box-shadow: none;
   }
 
   .folding-active .paper-section-2 {
-    box-shadow: 
-      0 -8px 16px rgba(0,0,0,0.25),
-      0 -4px 8px rgba(0,0,0,0.15),
-      inset 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: none;
   }
   
   /* Paper sections for tri-fold */
@@ -670,6 +655,7 @@ const styles = `
     overflow: hidden;
     transform-style: preserve-3d;
     backface-visibility: hidden;
+    background: transparent; /* Transparent so page background shows through when folded */
   }
   
   .paper-section-1 {
@@ -716,6 +702,7 @@ const styles = `
     overflow: hidden;
     transform-style: preserve-3d;
     backface-visibility: hidden;
+    background: transparent; /* Transparent so page background shows through when folded */
   }
   
   .paper-section-1 {
@@ -754,62 +741,14 @@ const styles = `
     animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Crease lines with bevel effect - First crease at 2/3 mark (bottom section folds up) */
+  /* Crease lines - Removed completely for clean fold effect */
   .folding-active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 66.66%;
-    height: 4px;
-    pointer-events: none;
-    z-index: 200;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,0.25) 8%,
-      rgba(0,0,0,0.4) 20%,
-      rgba(0,0,0,0.5) 50%,
-      rgba(0,0,0,0.4) 80%,
-      rgba(0,0,0,0.25) 92%,
-      transparent 100%
-    );
-    box-shadow: 
-      0 3px 4px rgba(0,0,0,0.2) inset,
-      0 -3px 3px rgba(255,255,255,0.5) inset,
-      0 0 6px rgba(0,0,0,0.15);
-    animation: creaseAppear 3.5s forwards ease-in;
-    border-top: 2px solid rgba(0,0,0,0.15);
-    border-bottom: 2px solid rgba(255,255,255,0.3);
+    display: none;
   }
 
-  /* Second crease at 1/3 mark (middle section folds) - appears later */
+  /* Second crease - Removed completely for clean fold effect */
   .folding-active::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 33.33%;
-    height: 4px;
-    pointer-events: none;
-    z-index: 200;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,0.25) 8%,
-      rgba(0,0,0,0.4) 20%,
-      rgba(0,0,0,0.5) 50%,
-      rgba(0,0,0,0.4) 80%,
-      rgba(0,0,0,0.25) 92%,
-      transparent 100%
-    );
-    box-shadow: 
-      0 3px 4px rgba(0,0,0,0.2) inset,
-      0 -3px 3px rgba(255,255,255,0.5) inset,
-      0 0 6px rgba(0,0,0,0.15);
-    animation: creaseAppearSecond 3.5s forwards ease-in;
-    border-top: 2px solid rgba(0,0,0,0.15);
-    border-bottom: 2px solid rgba(255,255,255,0.3);
+    display: none;
   }
   
   /* Custom Scrollbar */
@@ -869,9 +808,6 @@ const PostageStamp = ({ color, initials, isRead }) => (
 );
 
 const RealisticFire = () => {
-  // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:626',message:'RealisticFire component rendered',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-  // #endregion
   // Generate consistent random values for particles
   const getRandom = (seed, min, max) => {
     const x = Math.sin(seed) * 10000;
@@ -987,24 +923,6 @@ const RealisticFire = () => {
         // Match burn duration (3s) so flames stay visible throughout
         const flameRiseDuration = 3.0;
         const totalTime = delay + flameRiseDuration;
-        // #region agent log
-        if (i === 0 || i === 7 || i === 15) {
-          const willCompleteBefore3s = totalTime < 3;
-          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              location: 'App.jsx:696',
-              message: 'Flame particle created',
-              data: { index: i, delay, flameRiseDuration, totalTime, willCompleteBefore3s },
-              timestamp: Date.now(),
-              sessionId: 'debug-session',
-              runId: 'post-fix',
-              hypothesisId: 'D'
-            })
-          }).catch(() => {});
-        }
-        // #endregion
         
         return (
           <div
@@ -1368,6 +1286,7 @@ const App = () => {
               }}
             >
               <Envelope 
+                key={`envelope-${mail.id}-${isOpen && isTop ? 'open' : 'closed'}`}
                 data={mail} 
                 isOpen={isOpen && isTop} 
                 onClose={() => setIsOpen(false)} 
@@ -1389,32 +1308,41 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
   const [replyMode, setReplyMode] = useState(false);
   const [replyText, setReplyText] = useState("");
 
-  // Handle resets when closed
+  // Reset states when opening a new letter - CRITICAL FIX for state persistence bug
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      // Immediately reset all states when opening - prevents folded state from persisting
+      setIsFolding(false);
+      setIsBurning(false);
+      setReplyMode(false);
+      setReplyText("");
+    }
+  }, [isOpen, data.id]);
+
+  // Handle resets when closed - but don't reset during fold animation
+  useEffect(() => {
+    if (!isOpen && !isFolding) {
       setTimeout(() => {
         setIsFolding(false);
         setIsBurning(false);
         setReplyMode(false);
       }, 700);
+    } else if (!isOpen && isFolding) {
+      // Wait for animation to complete (3.5s) plus a small buffer before resetting
+      setTimeout(() => {
+        setIsFolding(false);
+        setIsBurning(false);
+        setReplyMode(false);
+      }, 3600);
     }
-  }, [isOpen]);
+  }, [isOpen, isFolding, data.id]);
 
   const handleBurnClick = (e) => {
     e.stopPropagation();
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1089',message:'handleBurnClick called',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     setIsBurning(true);
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1091',message:'isBurning set to true',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     
     // Match burn animation duration (3s)
     setTimeout(() => {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1094',message:'Archive timeout fired',data:{elapsed:3000,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
       onArchive();
     }, 3000);
   };
@@ -1425,7 +1353,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 3000); // Match fold animation duration (3s)
+    }, 3500); // Match fold animation duration (3.5s)
   };
 
   const handleReplyClick = (e) => {
@@ -1440,44 +1368,38 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 3000); // Match fold animation duration (3s)
+    }, 3500); // Match fold animation duration (3.5s)
   };
 
   return (
     <div 
       className={`
-        relative bg-[#F4F1EA] shadow-xl origin-center 
+        relative origin-center 
         flex flex-col overflow-hidden
+        ${isFolding ? '' : 'bg-[#F4F1EA] shadow-xl'}
         ${isBurning ? 'burning-active burning-container' : ''}
-        ${(() => {
-          // #region agent log
-          if (isBurning) {
-            fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1128',message:'Burning classes applied',data:{isBurning,hasBurningActive:true,hasBurningContainer:true,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
-          }
-          // #endregion
-          return '';
-        })()}
         ${isFolding ? 'folding-active' : 'transition-all duration-700'}
       `}
       style={{
         width: isOpen ? 'min(650px, 90vw)' : 'min(420px, 85vw)',
         height: isOpen ? '80vh' : '240px',
-        borderRadius: '2px', 
-        boxShadow: isOpen 
-           ? '0 25px 50px -12px rgba(0,0,0,0.25)' 
-           : '0 4px 10px -2px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)',
+        borderRadius: isFolding ? '0' : '2px', 
+        boxShadow: isFolding 
+           ? 'none'
+           : isOpen 
+             ? '0 25px 50px -12px rgba(0,0,0,0.25)' 
+             : '0 4px 10px -2px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)',
+        border: isFolding ? 'none' : undefined,
         transformStyle: 'preserve-3d',
         ...(isBurning && {
           transformOrigin: 'bottom right',
         }),
+        ...(isFolding && {
+          transformOrigin: 'center bottom',
+        }),
       }}
     >
-        {isBurning && (() => {
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1140',message:'RealisticFire conditionally rendered',data:{isBurning:true,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-          // #endregion
-          return <RealisticFire />;
-        })()}
+        {isBurning && <RealisticFire />}
         {/* Paper Grain Texture Overlay */}
         <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] z-0"></div>
 
@@ -1518,88 +1440,227 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
 
         {/* --- OPEN STATE (The Letter) --- */}
         <div className={`
-             absolute inset-0 z-30 flex flex-col bg-[#FCFAF5] transition-all duration-700 delay-100
+             absolute inset-0 z-30 flex flex-col transition-all duration-700 delay-100
              ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}
+             ${isFolding ? 'bg-transparent' : 'bg-[#FCFAF5]'}
         `}>
-            {/* Inner Paper Texture (Notebook Style) */}
-            <div className="absolute inset-0 pointer-events-none" 
-                 style={{ 
-                    backgroundImage: `
-                        linear-gradient(#E5E7EB 1px, transparent 1px), 
-                        linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
-                    `,
-                    backgroundSize: '100% 36px',
-                    backgroundPosition: '0 8px' 
-                 }}>
-            </div>
+            {/* Inner Paper Texture (Notebook Style) - Only show when not folding */}
+            {!isFolding && (
+              <div className="absolute inset-0 pointer-events-none" 
+                   style={{ 
+                      backgroundImage: `
+                          linear-gradient(#E5E7EB 1px, transparent 1px), 
+                          linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
+                      `,
+                      backgroundSize: '100% 36px',
+                      backgroundPosition: '0 8px' 
+                   }}>
+              </div>
+            )}
 
-            {/* Content Container (Main Letter or Reply UI) */}
+            {/* Content Container (Main Letter or Reply UI) - Wrapped in paper sections for fold animation */}
             <div className="flex-1 overflow-hidden relative z-10">
-                
-                {/* 1. READING MODE */}
-                <div className={`absolute inset-0 flex flex-col transition-transform duration-500 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
-                    <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
-                        {/* Letterhead */}
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
-                                <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
-                            </div>
+              {isFolding ? (
+                /* FOLDING MODE: Three overlapping sections showing different portions of the same content */
+                <>
+                  {/* Section 3 (Top third) - Stays visible, shows top portion of content */}
+                  <div className="paper-section paper-section-3">
+                    {/* Inner Paper Texture and Background for this section */}
+                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(0)', background: '#FCFAF5' }}>
+                        {/* Paper Texture Overlay */}
+                        <div className="absolute inset-0 pointer-events-none z-0" 
+                             style={{ 
+                                backgroundImage: `
+                                    linear-gradient(#E5E7EB 1px, transparent 1px), 
+                                    linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
+                                `,
+                                backgroundSize: '100% 36px',
+                                backgroundPosition: '0 8px' 
+                             }}>
                         </div>
-                        {/* Body */}
-                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                            {data.body.split('\n\n').map((para, i) => (
-                                <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
-                                    {para}
-                                </p>
-                            ))}
-                        </div>
-                        {/* Signature */}
-                        <div className="mt-12 border-l border-stone-200">
-                            <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
-                            <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                        <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%' }}>
+                            {/* Letterhead */}
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                                </div>
+                            </div>
+                            {/* Body */}
+                            <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                                {data.body.split('\n\n').map((para, i) => (
+                                    <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                                        {para}
+                                    </p>
+                                ))}
+                            </div>
+                            {/* Signature */}
+                            <div className="mt-12 border-l border-stone-200">
+                                <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                                <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                  </div>
+                  
+                  {/* Section 2 (Middle third) - Folds over top, shows middle portion */}
+                  <div className="paper-section paper-section-2">
+                    {/* Inner Paper Texture and Background for this section */}
+                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(-33.33%)', background: '#FCFAF5' }}>
+                        {/* Paper Texture Overlay */}
+                        <div className="absolute inset-0 pointer-events-none z-0" 
+                             style={{ 
+                                backgroundImage: `
+                                    linear-gradient(#E5E7EB 1px, transparent 1px), 
+                                    linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
+                                `,
+                                backgroundSize: '100% 36px',
+                                backgroundPosition: '0 8px' 
+                             }}>
+                        </div>
+                        <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%', marginTop: '33.33%' }}>
+                            {/* Letterhead */}
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                                </div>
+                            </div>
+                            {/* Body */}
+                            <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                                {data.body.split('\n\n').map((para, i) => (
+                                    <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                                        {para}
+                                    </p>
+                                ))}
+                            </div>
+                            {/* Signature */}
+                            <div className="mt-12 border-l border-stone-200">
+                                <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                                <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  
+                  {/* Section 1 (Bottom third) - Folds up and over, shows bottom portion */}
+                  <div className="paper-section paper-section-1">
+                    {/* Inner Paper Texture and Background for this section */}
+                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(-66.66%)', background: '#FCFAF5' }}>
+                        {/* Paper Texture Overlay */}
+                        <div className="absolute inset-0 pointer-events-none z-0" 
+                             style={{ 
+                                backgroundImage: `
+                                    linear-gradient(#E5E7EB 1px, transparent 1px), 
+                                    linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
+                                `,
+                                backgroundSize: '100% 36px',
+                                backgroundPosition: '0 8px' 
+                             }}>
+                        </div>
+                        <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%', marginTop: '66.66%' }}>
+                            {/* Letterhead */}
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                                </div>
+                            </div>
+                            {/* Body */}
+                            <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                                {data.body.split('\n\n').map((para, i) => (
+                                    <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                                        {para}
+                                    </p>
+                                ))}
+                            </div>
+                            {/* Signature */}
+                            <div className="mt-12 border-l border-stone-200">
+                                <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                                <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* NORMAL MODE: Single content view */
+                <>
+                  {/* 1. READING MODE */}
+                  <div className={`absolute inset-0 flex flex-col transition-transform duration-500 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                          {/* Letterhead */}
+                          <div className="flex justify-between items-start mb-6">
+                              <div>
+                                  <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                  <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                              </div>
+                              <div className="text-right">
+                                  <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                              </div>
+                          </div>
+                          {/* Body */}
+                          <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                              {data.body.split('\n\n').map((para, i) => (
+                                  <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                                      {para}
+                                  </p>
+                              ))}
+                          </div>
+                          {/* Signature */}
+                          <div className="mt-12 border-l border-stone-200">
+                              <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                              <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                          </div>
+                      </div>
+                  </div>
 
-                {/* 2. REPLY MODE */}
-                <div className={`absolute inset-0 flex flex-col bg-[#FCFAF5] transition-transform duration-500 ${replyMode ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
-                     <div className="flex items-center px-12 pt-10 pb-4 border-b border-stone-100">
-                        <button onClick={() => setReplyMode(false)} className="text-stone-400 hover:text-stone-800 mr-4">
-                            <ArrowLeft size={18} />
-                        </button>
-                        <p className="font-serif text-stone-600 italic">Replying to {data.sender}...</p>
-                     </div>
-                     <textarea 
-                        className="flex-1 w-full bg-transparent px-20 py-12 font-serif text-lg leading-[36px] text-stone-800 outline-none resize-none placeholder:text-stone-300"
-                        style={{
-                            backgroundImage: `
-                                linear-gradient(#E5E7EB 1px, transparent 1px), 
-                                linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
-                            `,
-                            backgroundSize: '100% 36px',
-                            backgroundPosition: '0 8px',
-                            backgroundAttachment: 'local'
-                        }}
-                        placeholder="Write your response here..."
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        autoFocus={replyMode}
-                     />
-                     <div className="p-8 flex justify-end">
-                         <button onClick={handleSendReply} className="bg-stone-800 text-stone-100 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-black transition-colors shadow-lg">
-                             <span className="text-xs uppercase tracking-widest">Send Letter</span>
-                             <Send size={14} />
-                         </button>
-                     </div>
-                </div>
+                  {/* 2. REPLY MODE */}
+                  <div className={`absolute inset-0 flex flex-col bg-[#FCFAF5] transition-transform duration-500 ${replyMode ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
+                       <div className="flex items-center px-12 pt-10 pb-4 border-b border-stone-100">
+                          <button onClick={() => setReplyMode(false)} className="text-stone-400 hover:text-stone-800 mr-4">
+                              <ArrowLeft size={18} />
+                          </button>
+                          <p className="font-serif text-stone-600 italic">Replying to {data.sender}...</p>
+                       </div>
+                       <textarea 
+                          className="flex-1 w-full bg-transparent px-20 py-12 font-serif text-lg leading-[36px] text-stone-800 outline-none resize-none placeholder:text-stone-300"
+                          style={{
+                              backgroundImage: `
+                                  linear-gradient(#E5E7EB 1px, transparent 1px), 
+                                  linear-gradient(90deg, transparent 60px, #FCA5A5 60px, #FCA5A5 61px, transparent 61px)
+                              `,
+                              backgroundSize: '100% 36px',
+                              backgroundPosition: '0 8px',
+                              backgroundAttachment: 'local'
+                          }}
+                          placeholder="Write your response here..."
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          autoFocus={replyMode}
+                       />
+                       <div className="p-8 flex justify-end">
+                           <button onClick={handleSendReply} className="bg-stone-800 text-stone-100 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-black transition-colors shadow-lg">
+                               <span className="text-xs uppercase tracking-widest">Send Letter</span>
+                               <Send size={14} />
+                           </button>
+                       </div>
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Bottom Toolbar (Only visible in Read Mode) */}
-            <div className={`h-16 border-t border-stone-100 bg-[#FCFAF5] flex items-center justify-center gap-8 shrink-0 z-20 transition-all duration-300 ${replyMode ? 'opacity-0 pointer-events-none translate-y-full' : 'opacity-100 translate-y-0'}`}>
+            {/* Bottom Toolbar (Only visible in Read Mode, hidden during fold) */}
+            <div className={`h-16 border-t border-stone-100 bg-[#FCFAF5] flex items-center justify-center gap-8 shrink-0 z-20 transition-all duration-300 ${replyMode || isFolding ? 'opacity-0 pointer-events-none translate-y-full' : 'opacity-100 translate-y-0'}`}>
                 <button 
                   onClick={handleFoldClick} 
                   className="flex flex-col items-center gap-1 group text-stone-400 hover:text-stone-800 transition-colors cursor-pointer"

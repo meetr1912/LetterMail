@@ -304,144 +304,208 @@ const styles = `
     opacity: 0.9;
   }
   .burning-container {
-    /* Create a jagged burn edge using a gradient mask */
-    -webkit-mask-image: radial-gradient(circle at bottom right, transparent 30%, black 50%);
-    mask-image: radial-gradient(circle at bottom right, transparent 30%, black 50%);
-    -webkit-mask-size: 200% 200%;
-    mask-size: 200% 200%;
-    -webkit-mask-position: 0% 0%; /* Start fully visible */
-    mask-position: 0% 0%;
+    /* Create realistic burn spread from bottom-right corner */
+    -webkit-mask-image: radial-gradient(ellipse at bottom right, transparent 0%, transparent 25%, black 35%, black 100%);
+    mask-image: radial-gradient(ellipse at bottom right, transparent 0%, transparent 25%, black 35%, black 100%);
+    -webkit-mask-size: 300% 300%;
+    mask-size: 300% 300%;
+    -webkit-mask-position: 66% 66%; /* Start at bottom-right */
+    mask-position: 66% 66%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
   }
   .burning-active {
-    animation: burnMask 2.5s forwards linear;
+    animation: burnMask 3s forwards cubic-bezier(0.4, 0, 0.6, 1);
   }
-  /* --- FOLD ANIMATION (REALISTIC PAPER FOLD - SLOW TRI-FOLD) --- */
   
-  /* Simulates realistic paper folding - slow enough to see tri-fold creases */
+  @keyframes burnMask {
+    0% { 
+      -webkit-mask-position: 66% 66%; 
+      mask-position: 66% 66%;
+      -webkit-mask-size: 300% 300%;
+      mask-size: 300% 300%;
+    }
+    30% {
+      -webkit-mask-position: 50% 50%;
+      mask-position: 50% 50%;
+      -webkit-mask-size: 250% 250%;
+      mask-size: 250% 250%;
+    }
+    60% {
+      -webkit-mask-position: 33% 33%;
+      mask-position: 33% 33%;
+      -webkit-mask-size: 200% 200%;
+      mask-size: 200% 200%;
+    }
+    100% { 
+      -webkit-mask-position: 0% 0%; 
+      mask-position: 0% 0%;
+      -webkit-mask-size: 150% 150%;
+      mask-size: 150% 150%;
+    }
+  }
+  /* --- FOLD ANIMATION (ACCURATE TRI-FOLD) --- */
+  
+  /* Realistic tri-fold: paper folds into three equal sections */
   @keyframes fold3D {
     0% { 
       transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0) scale(1); 
       opacity: 1; 
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
-    /* Gentle lift - like picking up paper */
-    8% { 
-      transform: perspective(1200px) rotateX(3deg) rotateY(0deg) translateY(-5px) translateZ(10px) scale(1.01); 
+    /* Gentle lift */
+    5% { 
+      transform: perspective(1200px) rotateX(2deg) rotateY(0deg) translateY(-3px) translateZ(5px) scale(1.005); 
       opacity: 1;
-      box-shadow: 0 28px 55px -10px rgba(0,0,0,0.28);
+      box-shadow: 0 26px 52px -11px rgba(0,0,0,0.26);
     }
-    /* First crease appears - bottom third folds up */
-    20% { 
-      transform: perspective(1200px) rotateX(12deg) rotateY(-1deg) translateY(-2px) translateZ(8px) scale(0.99); 
+    /* First crease forms - bottom third starts folding */
+    18% { 
+      transform: perspective(1200px) rotateX(8deg) rotateY(-0.5deg) translateY(-1px) translateZ(3px) scale(0.995); 
       opacity: 1;
-      box-shadow: 0 22px 45px -8px rgba(0,0,0,0.24);
+      box-shadow: 0 23px 46px -9px rgba(0,0,0,0.24);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 100% 100%, 0% 100%, 0% 66.66%);
     }
-    /* First fold complete - bottom third is folded */
-    35% { 
-      transform: perspective(1200px) rotateX(25deg) rotateY(-2deg) translateY(5px) translateZ(0px) scale(0.96); 
+    /* First fold - bottom third folds up */
+    32% { 
+      transform: perspective(1200px) rotateX(20deg) rotateY(-1deg) translateY(2px) translateZ(-2px) scale(0.97); 
       opacity: 1;
-      box-shadow: 0 18px 38px -6px rgba(0,0,0,0.22);
+      box-shadow: 0 19px 40px -7px rgba(0,0,0,0.22);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 95% 70%, 5% 70%, 0% 66.66%);
     }
-    /* Second crease appears - middle third starts folding */
-    50% { 
-      transform: perspective(1200px) rotateX(40deg) rotateY(-3deg) translateY(20px) translateZ(-15px) scale(0.90); 
+    /* First fold complete - bottom third folded */
+    42% { 
+      transform: perspective(1200px) rotateX(28deg) rotateY(-1.5deg) translateY(8px) translateZ(-8px) scale(0.94); 
       opacity: 1;
-      box-shadow: 0 14px 30px -4px rgba(0,0,0,0.2);
+      box-shadow: 0 16px 35px -6px rgba(0,0,0,0.21);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 98% 68%, 2% 68%, 0% 66.66%);
     }
-    /* Second fold complete - tri-fold position achieved */
-    65% { 
-      transform: perspective(1200px) rotateX(55deg) rotateY(-2deg) translateY(40px) translateZ(-25px) scale(0.85); 
+    /* Second crease forms - middle third starts folding */
+    55% { 
+      transform: perspective(1200px) rotateX(42deg) rotateY(-2deg) translateY(18px) translateZ(-18px) scale(0.88); 
+      opacity: 1;
+      box-shadow: 0 13px 28px -5px rgba(0,0,0,0.19);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 98% 35%, 2% 35%, 0% 33.33%, 0% 66.66%, 2% 68%, 98% 68%, 100% 66.66%);
+    }
+    /* Second fold - middle third folds */
+    68% { 
+      transform: perspective(1200px) rotateX(58deg) rotateY(-2deg) translateY(35px) translateZ(-28px) scale(0.82); 
       opacity: 0.98;
-      box-shadow: 0 12px 25px -3px rgba(0,0,0,0.18);
+      box-shadow: 0 11px 23px -4px rgba(0,0,0,0.17);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 99% 34%, 1% 34%, 0% 33.33%, 0% 66.66%, 1% 67%, 99% 67%, 100% 66.66%);
     }
-    /* Fully folded - tri-fold complete, holding position */
-    75% { 
-      transform: perspective(1200px) rotateX(65deg) rotateY(-2deg) translateY(60px) translateZ(-35px) scale(0.80); 
-      opacity: 0.95;
-      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.15);
+    /* Tri-fold complete - all three sections folded */
+    78% { 
+      transform: perspective(1200px) rotateX(68deg) rotateY(-1.5deg) translateY(55px) translateZ(-40px) scale(0.78); 
+      opacity: 0.96;
+      box-shadow: 0 9px 19px -3px rgba(0,0,0,0.15);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 99.5% 33.5%, 0.5% 33.5%, 0% 33.33%, 0% 66.66%, 0.5% 66.5%, 99.5% 66.5%, 100% 66.66%);
     }
-    /* Moving away - folded paper slides down */
-    85% { 
-      transform: perspective(1200px) rotateX(75deg) rotateY(-1deg) translateY(120px) translateZ(-50px) scale(0.72); 
-      opacity: 0.8;
-      box-shadow: 0 6px 12px -2px rgba(0,0,0,0.12);
+    /* Moving away */
+    88% { 
+      transform: perspective(1200px) rotateX(78deg) rotateY(-1deg) translateY(100px) translateZ(-55px) scale(0.70); 
+      opacity: 0.85;
+      box-shadow: 0 6px 13px -2px rgba(0,0,0,0.12);
     }
     100% { 
-      /* Final position - paper is folded and moved away */
-      transform: perspective(1200px) rotateX(85deg) rotateY(0deg) translateY(300px) translateZ(-80px) scale(0.65); 
+      transform: perspective(1200px) rotateX(88deg) rotateY(0deg) translateY(300px) translateZ(-80px) scale(0.65); 
       opacity: 0; 
       box-shadow: 0 0 0 0 transparent;
     }
   }
 
-  /* Animate shadow creases appearing as the paper bends - slow and visible */
+  /* Animate shadow creases appearing as the paper bends - visible tri-fold creases */
   @keyframes creaseAppear {
-    0% { opacity: 0; transform: scaleX(0.95); }
-    15% { opacity: 0.1; transform: scaleX(0.97); }
-    20% { opacity: 0.3; transform: scaleX(0.98); }
-    25% { opacity: 0.5; transform: scaleX(1); }
-    30% { opacity: 0.7; transform: scaleX(1); }
-    40% { opacity: 0.85; transform: scaleX(1.02); }
-    50% { opacity: 0.9; transform: scaleX(1.03); }
-    60% { opacity: 0.95; transform: scaleX(1.05); }
-    70% { opacity: 1; transform: scaleX(1.06); }
-    80% { opacity: 0.95; transform: scaleX(1.08); }
-    90% { opacity: 0.9; transform: scaleX(1.1); }
-    100% { opacity: 0.85; transform: scaleX(1.12); }
+    0% { opacity: 0; transform: scaleX(0.98); }
+    15% { opacity: 0.2; transform: scaleX(0.99); }
+    18% { opacity: 0.4; transform: scaleX(1); }
+    25% { opacity: 0.6; transform: scaleX(1.01); }
+    32% { opacity: 0.75; transform: scaleX(1.02); }
+    42% { opacity: 0.85; transform: scaleX(1.03); }
+    50% { opacity: 0.7; transform: scaleX(1.01); }
+    55% { opacity: 0.8; transform: scaleX(1.02); }
+    65% { opacity: 0.9; transform: scaleX(1.03); }
+    78% { opacity: 1; transform: scaleX(1.05); }
+    88% { opacity: 0.95; transform: scaleX(1.06); }
+    100% { opacity: 0.9; transform: scaleX(1.08); }
+  }
+  
+  /* Second crease animation - appears later */
+  @keyframes creaseAppearSecond {
+    0% { opacity: 0; transform: scaleX(0.98); }
+    50% { opacity: 0.2; transform: scaleX(0.99); }
+    55% { opacity: 0.4; transform: scaleX(1); }
+    60% { opacity: 0.6; transform: scaleX(1.01); }
+    68% { opacity: 0.75; transform: scaleX(1.02); }
+    78% { opacity: 0.9; transform: scaleX(1.03); }
+    88% { opacity: 1; transform: scaleX(1.05); }
+    100% { opacity: 0.95; transform: scaleX(1.06); }
   }
 
   .folding-active {
     transform-origin: center bottom;
-    animation: fold3D 2.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fold3D 3s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    overflow: visible;
   }
 
-  /* Crease lines with bevel effect - First crease at 1/3 mark */
+  /* Crease lines with bevel effect - First crease at 2/3 mark (bottom section folds up) */
   .folding-active::before {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    top: 33.33%;
-    height: 2px;
+    top: 66.66%;
+    height: 3px;
     pointer-events: none;
     z-index: 100;
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(0,0,0,0.15) 10%,
-      rgba(0,0,0,0.25) 50%,
-      rgba(0,0,0,0.15) 90%,
+      rgba(0,0,0,0.2) 8%,
+      rgba(0,0,0,0.35) 20%,
+      rgba(0,0,0,0.4) 50%,
+      rgba(0,0,0,0.35) 80%,
+      rgba(0,0,0,0.2) 92%,
       transparent 100%
     );
     box-shadow: 
-      0 1px 2px rgba(0,0,0,0.1) inset,
-      0 -1px 1px rgba(255,255,255,0.3) inset;
-    animation: creaseAppear 2.5s forwards ease-in;
+      0 2px 3px rgba(0,0,0,0.15) inset,
+      0 -2px 2px rgba(255,255,255,0.4) inset,
+      0 0 4px rgba(0,0,0,0.1);
+    animation: creaseAppear 3s forwards ease-in;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
   }
 
-  /* Second crease at 2/3 mark - tri-fold effect */
+  /* Second crease at 1/3 mark (middle section folds) - appears later */
   .folding-active::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    top: 66.66%;
-    height: 2px;
+    top: 33.33%;
+    height: 3px;
     pointer-events: none;
     z-index: 100;
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(0,0,0,0.15) 10%,
-      rgba(0,0,0,0.25) 50%,
-      rgba(0,0,0,0.15) 90%,
+      rgba(0,0,0,0.2) 8%,
+      rgba(0,0,0,0.35) 20%,
+      rgba(0,0,0,0.4) 50%,
+      rgba(0,0,0,0.35) 80%,
+      rgba(0,0,0,0.2) 92%,
       transparent 100%
     );
     box-shadow: 
-      0 1px 2px rgba(0,0,0,0.1) inset,
-      0 -1px 1px rgba(255,255,255,0.3) inset;
-    animation: creaseAppear 0.8s forwards ease-in 0.05s;
+      0 2px 3px rgba(0,0,0,0.15) inset,
+      0 -2px 2px rgba(255,255,255,0.4) inset,
+      0 0 4px rgba(0,0,0,0.1);
+    animation: creaseAppearSecond 3s forwards ease-in;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
   }
   
   /* Custom Scrollbar */
@@ -967,10 +1031,10 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     e.stopPropagation();
     setIsBurning(true);
     
-    // Increased duration to match the engulf animation
+    // Match burn animation duration (3s)
     setTimeout(() => {
       onArchive();
-    }, 2400);
+    }, 3000);
   };
 
   const handleFoldClick = (e) => {
@@ -979,7 +1043,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 2500); // Match fold animation duration (2.5s)
+    }, 3000); // Match fold animation duration (3s)
   };
 
   const handleReplyClick = (e) => {
@@ -994,7 +1058,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 2500); // Match fold animation duration (2.5s)
+    }, 3000); // Match fold animation duration (3s)
   };
 
   return (

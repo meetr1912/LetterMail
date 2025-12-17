@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Search, PenTool, X, Flame, Reply, Send, ArrowLeft, Cloud } from 'lucide-react';
 
@@ -1264,6 +1264,9 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
   const [isFolding, setIsFolding] = useState(false);
   const [replyMode, setReplyMode] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const foldAnimationStartRef = useRef(null);
+  const [section1Rotation, setSection1Rotation] = useState(0);
+  const [section2Rotation, setSection2Rotation] = useState(0);
 
   // Reset states when opening a new letter - CRITICAL FIX for state persistence bug
   useEffect(() => {
@@ -1308,6 +1311,26 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     e.stopPropagation();
     setReplyMode(false);
     setIsFolding(true); // Triggers the 3D fold animation
+    // Track animation progress to hide content when sections fold past 90deg
+    const startTime = Date.now();
+    const checkRotation = () => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const progress = Math.min(elapsed / 3.5, 1);
+      // Section 1: 0deg -> 180deg (starts immediately)
+      const rot1 = progress * 180;
+      // Section 2: starts at 50%, 0deg -> 140deg
+      const rot2 = progress < 0.5 ? 0 : ((progress - 0.5) / 0.5) * 140;
+      setSection1Rotation(rot1);
+      setSection2Rotation(rot2);
+      if (progress < 1) {
+        requestAnimationFrame(checkRotation);
+      } else {
+        // Reset rotations after animation completes
+        setSection1Rotation(0);
+        setSection2Rotation(0);
+      }
+    };
+    requestAnimationFrame(checkRotation);
     setTimeout(() => {
         onClose();
     }, 3500); // Match fold animation duration (3.5s)
@@ -1423,7 +1446,12 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                   {/* Section 3 (Top third) - Stays visible, shows top portion of content */}
                   <div className="paper-section paper-section-3">
                     {/* Inner Paper Texture and Background for this section */}
-                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(0)', background: '#FCFAF5' }}>
+                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(0)', background: '#FCFAF5' }} ref={(el) => {
+                      if (el) {
+                        const rect = el.getBoundingClientRect();
+                        fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1426',message:'Section 3 content wrapper',data:{section:'section-3',wrapperHeight:rect.height,wrapperTop:rect.top,translateY:'0',hasFullContent:true,section1Rot:section1Rotation,section2Rot:section2Rotation,alwaysVisible:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                      }
+                    }}>
                         {/* Paper Texture Overlay */}
                         <div className="absolute inset-0 pointer-events-none z-0" 
                              style={{ 
@@ -1466,6 +1494,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                   {/* Section 2 (Middle third) - Folds over top, shows middle portion */}
                   <div className="paper-section paper-section-2">
                     {/* Inner Paper Texture and Background for this section */}
+                    {section2Rotation <= 90 && (
                     <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(-33.33%)', background: '#FCFAF5' }}>
                         {/* Paper Texture Overlay */}
                         <div className="absolute inset-0 pointer-events-none z-0" 
@@ -1504,11 +1533,13 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             </div>
                         </div>
                     </div>
+                    )}
                   </div>
                   
                   {/* Section 1 (Bottom third) - Folds up and over, shows bottom portion */}
                   <div className="paper-section paper-section-1">
                     {/* Inner Paper Texture and Background for this section */}
+                    {section1Rotation <= 90 && (
                     <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(-66.66%)', background: '#FCFAF5' }}>
                         {/* Paper Texture Overlay */}
                         <div className="absolute inset-0 pointer-events-none z-0" 
@@ -1547,6 +1578,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             </div>
                         </div>
                     </div>
+                    )}
                   </div>
                 </>
               ) : (

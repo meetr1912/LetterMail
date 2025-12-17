@@ -187,11 +187,91 @@ const styles = `
   }
   
   @keyframes paperBurnEdge {
-    0% { opacity: 0; transform: scaleX(0); }
-    20% { opacity: 0.3; }
-    40% { opacity: 0.6; transform: scaleX(0.5); }
-    60% { opacity: 0.8; transform: scaleX(0.8); }
-    100% { opacity: 1; transform: scaleX(1); }
+    0% { opacity: 0; transform: scaleX(0) translateY(0); }
+    20% { opacity: 0.3; transform: scaleX(0.3) translateY(-2px); }
+    40% { opacity: 0.6; transform: scaleX(0.5) translateY(-5px); }
+    60% { opacity: 0.8; transform: scaleX(0.8) translateY(-8px); }
+    100% { opacity: 1; transform: scaleX(1) translateY(-12px); }
+  }
+
+  /* Paper curl effect as it burns */
+  @keyframes paperCurl {
+    0% { 
+      transform: rotateY(0deg) rotateX(0deg) translateZ(0);
+      opacity: 1;
+    }
+    20% { 
+      transform: rotateY(5deg) rotateX(-2deg) translateZ(2px);
+      opacity: 0.95;
+    }
+    40% { 
+      transform: rotateY(12deg) rotateX(-5deg) translateZ(5px);
+      opacity: 0.9;
+    }
+    60% { 
+      transform: rotateY(20deg) rotateX(-8deg) translateZ(8px);
+      opacity: 0.8;
+    }
+    80% { 
+      transform: rotateY(30deg) rotateX(-12deg) translateZ(12px);
+      opacity: 0.6;
+    }
+    100% { 
+      transform: rotateY(45deg) rotateX(-15deg) translateZ(15px);
+      opacity: 0.4;
+    }
+  }
+
+  /* Charred edge progression */
+  @keyframes charredEdge {
+    0% { 
+      clip-path: polygon(100% 100%, 100% 100%, 100% 100%);
+      opacity: 0;
+    }
+    10% { 
+      clip-path: polygon(85% 100%, 90% 95%, 100% 100%);
+      opacity: 0.3;
+    }
+    30% { 
+      clip-path: polygon(70% 100%, 75% 90%, 85% 85%, 100% 100%);
+      opacity: 0.6;
+    }
+    50% { 
+      clip-path: polygon(50% 100%, 55% 85%, 65% 75%, 80% 70%, 100% 100%);
+      opacity: 0.8;
+    }
+    70% { 
+      clip-path: polygon(30% 100%, 35% 80%, 45% 65%, 60% 55%, 75% 50%, 100% 100%);
+      opacity: 0.9;
+    }
+    100% { 
+      clip-path: polygon(0% 100%, 5% 70%, 15% 50%, 30% 40%, 50% 35%, 70% 30%, 100% 100%);
+      opacity: 1;
+    }
+  }
+
+  /* Burn wave effect */
+  @keyframes burnWave {
+    0% { 
+      transform: translateX(0) translateY(0) scale(0.8);
+      opacity: 0;
+    }
+    20% { 
+      transform: translateX(-5px) translateY(-3px) scale(1);
+      opacity: 0.8;
+    }
+    50% { 
+      transform: translateX(-15px) translateY(-8px) scale(1.2);
+      opacity: 1;
+    }
+    80% { 
+      transform: translateX(-25px) translateY(-15px) scale(1.4);
+      opacity: 0.9;
+    }
+    100% { 
+      transform: translateX(-40px) translateY(-25px) scale(1.6);
+      opacity: 0.7;
+    }
   }
   
   @keyframes base-flicker {
@@ -348,76 +428,141 @@ const styles = `
   }
   /* --- FOLD ANIMATION (REALISTIC TRI-FOLD WITH SECTIONS) --- */
   
-  /* Container animation - overall movement */
+  /* Container animation - overall movement with realistic physics */
   @keyframes foldContainer {
     0% { 
-      transform: perspective(1200px) translateY(0) translateZ(0); 
+      transform: perspective(1200px) translateY(0) translateZ(0) rotateX(0deg); 
+    }
+    5% { 
+      transform: perspective(1200px) translateY(-3px) translateZ(2px) rotateX(2deg); 
     }
     10% { 
-      transform: perspective(1200px) translateY(-5px) translateZ(5px); 
+      transform: perspective(1200px) translateY(-5px) translateZ(5px) rotateX(3deg); 
     }
-    100% { 
-      transform: perspective(1200px) translateY(300px) translateZ(-80px); 
-    }
-  }
-  
-  /* Section 1 (Bottom third) - Folds UP and OVER middle section */
-  @keyframes foldSection1 {
-    0% { 
-      transform: rotateX(0deg) translateZ(0);
-      z-index: 1;
-    }
-    15% { 
-      transform: rotateX(15deg) translateZ(5px);
-      z-index: 2;
-    }
-    30% { 
-      transform: rotateX(45deg) translateZ(10px);
-      z-index: 3;
-    }
-    45% { 
-      transform: rotateX(90deg) translateZ(15px);
-      z-index: 3;
-    }
-    60% { 
-      transform: rotateX(120deg) translateZ(20px);
-      z-index: 3;
-    }
-    75% { 
-      transform: rotateX(150deg) translateZ(25px);
-      z-index: 3;
-    }
-    100% { 
-      transform: rotateX(180deg) translateZ(30px);
-      z-index: 3;
-    }
-  }
-  
-  /* Section 2 (Middle third) - Folds OVER top section */
-  @keyframes foldSection2 {
-    0% { 
-      transform: rotateX(0deg) translateZ(0);
-      z-index: 1;
+    20% { 
+      transform: perspective(1200px) translateY(-8px) translateZ(8px) rotateX(5deg); 
     }
     50% { 
-      transform: rotateX(0deg) translateZ(0);
-      z-index: 1;
+      transform: perspective(1200px) translateY(-15px) translateZ(15px) rotateX(8deg); 
     }
-    60% { 
-      transform: rotateX(20deg) translateZ(5px);
-      z-index: 2;
-    }
-    75% { 
-      transform: rotateX(60deg) translateZ(10px);
-      z-index: 2;
-    }
-    90% { 
-      transform: rotateX(100deg) translateZ(15px);
-      z-index: 2;
+    80% { 
+      transform: perspective(1200px) translateY(100px) translateZ(-40px) rotateX(12deg); 
     }
     100% { 
-      transform: rotateX(140deg) translateZ(20px);
+      transform: perspective(1200px) translateY(300px) translateZ(-80px) rotateX(15deg); 
+    }
+  }
+  
+  /* Section 1 (Bottom third) - Folds UP and OVER middle section with realistic resistance */
+  @keyframes foldSection1 {
+    0% { 
+      transform: rotateX(0deg) translateZ(0) scaleY(1);
+      z-index: 1;
+      filter: brightness(1);
+    }
+    8% { 
+      transform: rotateX(8deg) translateZ(2px) scaleY(0.98);
+      z-index: 1;
+      filter: brightness(0.98);
+    }
+    15% { 
+      transform: rotateX(18deg) translateZ(5px) scaleY(0.96);
       z-index: 2;
+      filter: brightness(0.96);
+    }
+    25% { 
+      transform: rotateX(35deg) translateZ(8px) scaleY(0.94);
+      z-index: 2;
+      filter: brightness(0.94);
+    }
+    35% { 
+      transform: rotateX(55deg) translateZ(12px) scaleY(0.92);
+      z-index: 3;
+      filter: brightness(0.92);
+    }
+    45% { 
+      transform: rotateX(75deg) translateZ(15px) scaleY(0.90);
+      z-index: 3;
+      filter: brightness(0.90);
+    }
+    55% { 
+      transform: rotateX(95deg) translateZ(18px) scaleY(0.88);
+      z-index: 3;
+      filter: brightness(0.88);
+    }
+    65% { 
+      transform: rotateX(115deg) translateZ(20px) scaleY(0.86);
+      z-index: 3;
+      filter: brightness(0.86);
+    }
+    75% { 
+      transform: rotateX(135deg) translateZ(23px) scaleY(0.84);
+      z-index: 3;
+      filter: brightness(0.84);
+    }
+    85% { 
+      transform: rotateX(155deg) translateZ(26px) scaleY(0.82);
+      z-index: 3;
+      filter: brightness(0.82);
+    }
+    100% { 
+      transform: rotateX(180deg) translateZ(30px) scaleY(0.80);
+      z-index: 3;
+      filter: brightness(0.80);
+    }
+  }
+  
+  /* Section 2 (Middle third) - Folds OVER top section with realistic resistance */
+  @keyframes foldSection2 {
+    0% { 
+      transform: rotateX(0deg) translateZ(0) scaleY(1);
+      z-index: 1;
+      filter: brightness(1);
+    }
+    50% { 
+      transform: rotateX(0deg) translateZ(0) scaleY(1);
+      z-index: 1;
+      filter: brightness(1);
+    }
+    55% { 
+      transform: rotateX(5deg) translateZ(2px) scaleY(0.99);
+      z-index: 1;
+      filter: brightness(0.99);
+    }
+    60% { 
+      transform: rotateX(12deg) translateZ(4px) scaleY(0.98);
+      z-index: 2;
+      filter: brightness(0.98);
+    }
+    68% { 
+      transform: rotateX(30deg) translateZ(7px) scaleY(0.96);
+      z-index: 2;
+      filter: brightness(0.96);
+    }
+    75% { 
+      transform: rotateX(50deg) translateZ(10px) scaleY(0.94);
+      z-index: 2;
+      filter: brightness(0.94);
+    }
+    82% { 
+      transform: rotateX(75deg) translateZ(13px) scaleY(0.92);
+      z-index: 2;
+      filter: brightness(0.92);
+    }
+    90% { 
+      transform: rotateX(100deg) translateZ(16px) scaleY(0.90);
+      z-index: 2;
+      filter: brightness(0.90);
+    }
+    95% { 
+      transform: rotateX(120deg) translateZ(18px) scaleY(0.88);
+      z-index: 2;
+      filter: brightness(0.88);
+    }
+    100% { 
+      transform: rotateX(140deg) translateZ(20px) scaleY(0.86);
+      z-index: 2;
+      filter: brightness(0.86);
     }
   }
   
@@ -433,17 +578,53 @@ const styles = `
     }
   }
 
-  /* Animate shadow creases appearing as the paper bends - visible tri-fold creases */
+  /* Animate shadow creases appearing as the paper bends - visible tri-fold creases with depth */
   @keyframes creaseAppear {
-    0% { opacity: 0; transform: scaleX(0.98); }
-    10% { opacity: 0.3; transform: scaleX(0.99); }
-    15% { opacity: 0.5; transform: scaleX(1); }
-    20% { opacity: 0.7; transform: scaleX(1.01); }
-    30% { opacity: 0.85; transform: scaleX(1.02); }
-    45% { opacity: 1; transform: scaleX(1.03); }
-    60% { opacity: 1; transform: scaleX(1.04); }
-    75% { opacity: 1; transform: scaleX(1.05); }
-    100% { opacity: 1; transform: scaleX(1.06); }
+    0% { 
+      opacity: 0; 
+      transform: scaleX(0.98) scaleY(1);
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    10% { 
+      opacity: 0.3; 
+      transform: scaleX(0.99) scaleY(0.99);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    15% { 
+      opacity: 0.5; 
+      transform: scaleX(1) scaleY(0.98);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    20% { 
+      opacity: 0.7; 
+      transform: scaleX(1.01) scaleY(0.97);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    30% { 
+      opacity: 0.85; 
+      transform: scaleX(1.02) scaleY(0.96);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    }
+    45% { 
+      opacity: 1; 
+      transform: scaleX(1.03) scaleY(0.95);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+    60% { 
+      opacity: 1; 
+      transform: scaleX(1.04) scaleY(0.94);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.35);
+    }
+    75% { 
+      opacity: 1; 
+      transform: scaleX(1.05) scaleY(0.93);
+      box-shadow: 0 7px 14px rgba(0,0,0,0.4);
+    }
+    100% { 
+      opacity: 1; 
+      transform: scaleX(1.06) scaleY(0.92);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.45);
+    }
   }
   
   /* Second crease animation - appears later */
@@ -463,6 +644,68 @@ const styles = `
     animation: foldContainer 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: visible;
+    transform-style: preserve-3d;
+  }
+
+  /* Enhanced shadows for folded sections */
+  .folding-active .paper-section-1 {
+    box-shadow: 
+      0 -10px 20px rgba(0,0,0,0.3),
+      0 -5px 10px rgba(0,0,0,0.2),
+      inset 0 5px 10px rgba(0,0,0,0.1);
+  }
+
+  .folding-active .paper-section-2 {
+    box-shadow: 
+      0 -8px 16px rgba(0,0,0,0.25),
+      0 -4px 8px rgba(0,0,0,0.15),
+      inset 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* Paper sections for tri-fold */
+  .paper-section {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .paper-section-1 {
+    /* Bottom third */
+    top: 66.66%;
+    height: 33.34%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-2 {
+    /* Middle third */
+    top: 33.33%;
+    height: 33.33%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-3 {
+    /* Top third */
+    top: 0%;
+    height: 33.33%;
+    transform-origin: bottom center;
+    z-index: 1;
+  }
+  
+  .folding-active .paper-section-1 {
+    animation: foldSection1 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-2 {
+    animation: foldSection2 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-3 {
+    animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   /* Paper sections for tri-fold */
@@ -636,7 +879,44 @@ const RealisticFire = () => {
   };
 
   return (
-    <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
+    <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm" style={{ transformStyle: 'preserve-3d' }}>
+      {/* Paper Curl Effect - Paper curls as it burns */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          transformOrigin: 'bottom right',
+          animation: 'paperCurl 3s forwards ease-out',
+          zIndex: 49,
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10" />
+      </div>
+
+      {/* Charred Edge - Dark edge that follows the burn */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, transparent 50%, rgba(30,15,8,0.9) 60%, rgba(60,30,15,0.95) 70%, rgba(101,67,33,1) 80%, rgba(139,69,19,0.8) 90%, transparent 100%)',
+          clipPath: 'polygon(100% 100%, 100% 100%, 100% 100%)',
+          animation: 'charredEdge 3s forwards ease-out',
+          mixBlendMode: 'multiply',
+          filter: 'blur(2px)',
+          zIndex: 50,
+        }}
+      />
+
+      {/* Burn Wave - Irregular burn progression */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse at bottom right, rgba(139,69,19,0.6) 0%, rgba(101,67,33,0.4) 30%, transparent 60%)',
+          animation: 'burnWave 3s forwards ease-out',
+          mixBlendMode: 'multiply',
+          filter: 'blur(3px)',
+          zIndex: 51,
+        }}
+      />
+
       {/* CSS-Only Fire Base Layer - Ultra realistic using glitter texture */}
       <div className="css-fire-base" style={{
         transform: 'scale(1.5) translate(3%, 2%)',
@@ -1173,6 +1453,10 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
         boxShadow: isOpen 
            ? '0 25px 50px -12px rgba(0,0,0,0.25)' 
            : '0 4px 10px -2px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)',
+        transformStyle: 'preserve-3d',
+        ...(isBurning && {
+          transformOrigin: 'bottom right',
+        }),
       }}
     >
         {isBurning && (() => {

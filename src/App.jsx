@@ -192,6 +192,41 @@ const styles = `
     100% { opacity: 1; transform: scaleX(1); }
   }
   
+  @keyframes base-flicker {
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.05); opacity: 0.7; }
+    100% { transform: scale(1.1); opacity: 0.65; }
+  }
+  
+  @keyframes fire-particle-rise {
+    0% {
+      transform: translateY(0) scale(0.5) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(-100px) scale(1) rotate(5deg);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-250px) scale(0.5) rotate(10deg);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes spark-rise {
+    0% {
+      transform: translateY(0) translateX(0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-80px) translateX(var(--spark-x, 0px)) scale(0);
+      opacity: 0;
+    }
+  }
+  
   /* CSS-Only Fire Animation using glitter texture - Ultra realistic */
   @keyframes cssFire {
     0% {
@@ -458,10 +493,24 @@ const RealisticFire = () => {
     <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
       {/* CSS-Only Fire Base Layer - Ultra realistic using glitter texture */}
       <div className="css-fire-base" style={{
-        transform: 'scale(1.4) translate(5%, 3%)',
+        transform: 'scale(1.5) translate(3%, 2%)',
         transformOrigin: 'bottom right',
         opacity: 1
       }} />
+      
+      {/* Fire Base Glow - Like fireplace ember */}
+      <div 
+        className="absolute w-[150%] h-[120%]"
+        style={{
+          bottom: '-10%',
+          right: '-25%',
+          background: 'radial-gradient(ellipse at center, rgba(255,140,0,0.6) 0%, rgba(255,69,0,0.4) 40%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(8px)',
+          animation: 'base-flicker 1s infinite alternate',
+          zIndex: 52
+        }}
+      />
       
       {/* Enhanced Heat Distortion Layer - More intense */}
       <div 
@@ -607,12 +656,45 @@ const RealisticFire = () => {
         );
       })}
       
-      {/* Spark Particles - Quick popping sparks */}
-      {[...Array(20)].map((_, i) => {
-        const delay = getRandom(i + 2000, 0.2, 1.5);
-        const rightOffset = getRandom(i + 2100, 20, 70);
-        const size = getRandom(i + 2200, 2, 6);
-        const duration = getRandom(i + 2300, 0.4, 0.8);
+      {/* Fire Particles - Realistic rising particles like fireplace */}
+      {[...Array(25)].map((_, i) => {
+        const delay = getRandom(i + 2000, 0, 2);
+        const rightOffset = getRandom(i + 2100, 15, 80);
+        const size = getRandom(i + 2200, 30, 100);
+        const duration = getRandom(i + 2300, 1.5, 3);
+        const rotation = getRandom(i + 2400, -10, 10);
+        
+        return (
+          <div
+            key={`fire-particle-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `radial-gradient(ellipse at center, 
+                rgba(255,140,0,0.8) 0%, 
+                rgba(255,69,0,0.5) 40%, 
+                rgba(255,0,0,0) 70%)`,
+              borderRadius: '50%',
+              filter: 'blur(5px)',
+              animation: `fire-particle-rise ${duration}s ease-out ${delay}s infinite`,
+              opacity: 0,
+              transformOrigin: 'center bottom',
+              zIndex: 53
+            }}
+          />
+        );
+      })}
+      
+      {/* Spark Particles - Quick popping sparks like fireplace */}
+      {[...Array(30)].map((_, i) => {
+        const delay = getRandom(i + 3000, 0.1, 1.8);
+        const rightOffset = getRandom(i + 3100, 20, 75);
+        const size = getRandom(i + 3200, 2, 5);
+        const duration = getRandom(i + 3300, 0.3, 0.7);
+        const sparkX = getRandom(i + 3400, -15, 15);
         
         return (
           <div
@@ -621,24 +703,27 @@ const RealisticFire = () => {
             style={{
               width: `${size}px`,
               height: `${size}px`,
-              bottom: `${getRandom(i + 2400, 0, 15)}%`,
+              bottom: `${getRandom(i + 3500, 0, 20)}%`,
               right: `${rightOffset}%`,
               background: `radial-gradient(circle, #ffffff 0%, #ffed4e 50%, #ff8c00 100%)`,
-              boxShadow: `0 0 ${size * 4}px rgba(255,215,0,1), 0 0 ${size * 6}px rgba(255,140,0,0.8)`,
-              animation: `sparkPop ${duration}s forwards ease-out ${delay}s`,
+              boxShadow: `0 0 ${size * 3}px rgba(255,215,0,1), 0 0 ${size * 5}px rgba(255,140,0,0.9)`,
+              animation: `spark-rise ${duration}s ease-out ${delay}s infinite`,
               opacity: 0,
-              filter: 'brightness(1.5)'
+              filter: 'brightness(1.8)',
+              zIndex: 54,
+              '--spark-x': `${sparkX}px`
             }}
           />
         );
       })}
       
-      {/* Smoke Particles - Multiple layers for depth */}
-      {[...Array(15)].map((_, i) => {
-        const delay = i * 0.15;
-        const rightOffset = getRandom(i + 2000, 20, 70);
-        const size = getRandom(i + 2100, 40, 100);
-        const duration = getRandom(i + 2200, 3, 5);
+      {/* Smoke Particles - Realistic fireplace smoke */}
+      {[...Array(20)].map((_, i) => {
+        const delay = i * 0.12;
+        const rightOffset = getRandom(i + 4000, 15, 80);
+        const size = getRandom(i + 4100, 30, 80);
+        const duration = getRandom(i + 4200, 3, 6);
+        const rotation = getRandom(i + 4300, -15, 15);
         
         return (
           <div
@@ -649,21 +734,23 @@ const RealisticFire = () => {
               height: `${size}px`,
               bottom: '0%',
               right: `${rightOffset}%`,
-              background: `radial-gradient(circle, rgba(100,100,100,0.4) 0%, rgba(60,60,60,0.3) 50%, transparent 100%)`,
-              filter: 'blur(20px)',
-              animation: `smokeRise ${duration}s forwards ease-out ${delay}s`,
-              opacity: 0
+              background: `radial-gradient(circle, rgba(150,150,150,0.3) 0%, rgba(100,100,100,0.2) 50%, transparent 100%)`,
+              filter: 'blur(15px)',
+              animation: `smokeRise ${duration}s ease-out ${delay}s infinite`,
+              opacity: 0,
+              transform: `rotate(${rotation}deg)`,
+              zIndex: 55
             }}
           />
         );
       })}
       
-      {/* Additional Smoke Wisp - Thin tendrils */}
-      {[...Array(10)].map((_, i) => {
-        const delay = i * 0.2 + 0.5;
-        const rightOffset = getRandom(i + 3000, 25, 65);
-        const width = getRandom(i + 3100, 30, 60);
-        const height = getRandom(i + 3200, 80, 150);
+      {/* Additional Smoke Wisp - Thin tendrils like fireplace */}
+      {[...Array(12)].map((_, i) => {
+        const delay = i * 0.15 + 0.3;
+        const rightOffset = getRandom(i + 5000, 20, 75);
+        const width = getRandom(i + 5100, 25, 50);
+        const height = getRandom(i + 5200, 60, 120);
         
         return (
           <div
@@ -674,11 +761,12 @@ const RealisticFire = () => {
               height: `${height}px`,
               bottom: '0%',
               right: `${rightOffset}%`,
-              background: `radial-gradient(ellipse, rgba(120,120,120,0.3) 0%, rgba(80,80,80,0.2) 50%, transparent 100%)`,
-              filter: 'blur(15px)',
-              animation: `smokeRise ${getRandom(i + 3300, 4, 6)}s forwards ease-out ${delay}s`,
+              background: `radial-gradient(ellipse, rgba(130,130,130,0.25) 0%, rgba(90,90,90,0.15) 50%, transparent 100%)`,
+              filter: 'blur(12px)',
+              animation: `smokeRise ${getRandom(i + 5300, 4, 7)}s ease-out ${delay}s infinite`,
               opacity: 0,
-              transform: `rotate(${getRandom(i + 3400, -20, 20)}deg)`
+              transform: `rotate(${getRandom(i + 5400, -25, 25)}deg)`,
+              zIndex: 56
             }}
           />
         );

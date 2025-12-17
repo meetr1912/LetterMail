@@ -989,7 +989,20 @@ const RealisticFire = () => {
         const totalTime = delay + flameRiseDuration;
         // #region agent log
         if (i === 0 || i === 7 || i === 15) {
-          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:696',message:'Flame particle created',data:{index:i,delay,flameRiseDuration,totalTime,willCompleteBefore3s:totalTime<3},timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+          const willCompleteBefore3s = totalTime < 3;
+          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              location: 'App.jsx:696',
+              message: 'Flame particle created',
+              data: { index: i, delay, flameRiseDuration, totalTime, willCompleteBefore3s },
+              timestamp: Date.now(),
+              sessionId: 'debug-session',
+              runId: 'post-fix',
+              hypothesisId: 'D'
+            })
+          }).catch(() => {});
         }
         // #endregion
         

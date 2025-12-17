@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { Search, PenTool, X, Flame, Reply, Send, ArrowLeft, Cloud } from 'lucide-react';
+import { Search, PenTool, X, Flame, Reply, Send, ArrowLeft, Cloud, Loader2 } from 'lucide-react';
+import gmailService from './services/gmailService';
+import GmailAuth from './components/GmailAuth';
 
 // --- MOCK DATA ---
 
@@ -1148,6 +1150,57 @@ const App = () => {
   const [mails, setMails] = useState(EMAILS);
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoadingEmails, setIsLoadingEmails] = useState(false);
+  const [useGmail, setUseGmail] = useState(false);
+  const [gmailError, setGmailError] = useState(null);
+
+  // Check authentication status and fetch emails
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await gmailService.initialize();
+        if (gmailService.isAuthenticated()) {
+          setIsAuthenticated(true);
+          if (useGmail) {
+            await fetchGmailEmails();
+          }
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  // Fetch emails from Gmail
+  const fetchGmailEmails = async () => {
+    setIsLoadingEmails(true);
+    setGmailError(null);
+    try {
+      const emails = await gmailService.fetchEmails(10);
+      if (emails.length > 0) {
+        setMails(emails);
+      } else {
+        setGmailError('No emails found in your inbox.');
+      }
+    } catch (error) {
+      setGmailError(error.message || 'Failed to fetch emails from Gmail');
+      console.error('Error fetching Gmail emails:', error);
+      // Fall back to mock data on error
+      setMails(EMAILS);
+    } finally {
+      setIsLoadingEmails(false);
+    }
+  };
+
+  // Handle successful authentication
+  const handleAuthenticated = async () => {
+    setIsAuthenticated(true);
+    setUseGmail(true);
+    await fetchGmailEmails();
+  };
 
   // Helper for greeting
   const getGreeting = () => {
@@ -1158,15 +1211,25 @@ const App = () => {
   };
 
   // Bring clicked card to front
-  const activateCard = (index, e) => {
+  const activateCard = async (index, e) => {
     e?.stopPropagation();
     if (isAnimating) return;
     if (index === 0) {
       setIsOpen(true);
       // Mark as read when opened
       const newMails = [...mails];
-      newMails[0].read = true;
+      const currentMail = newMails[0];
+      currentMail.read = true;
       setMails(newMails);
+      
+      // Mark as read in Gmail if using Gmail
+      if (useGmail && currentMail.gmailMessageId) {
+        try {
+          await gmailService.markAsRead(currentMail.gmailMessageId);
+        } catch (error) {
+          console.error('Error marking email as read in Gmail:', error);
+        }
+      }
       return;
     }
     setIsAnimating(true);
@@ -1193,13 +1256,49 @@ const App = () => {
     setIsAnimating(false);
   };
 
+  // Show Gmail auth if not authenticated and user wants to use Gmail
+  if (useGmail && !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#E6E2D8] flex flex-col items-center justify-center font-serif text-[#5A5A5A] p-8">
+        <GmailAuth onAuthenticated={handleAuthenticated} isAuthenticated={isAuthenticated} />
+        <button
+          onClick={() => {
+            setUseGmail(false);
+            setMails(EMAILS);
+          }}
+          className="mt-6 text-xs uppercase tracking-widest border-b border-stone-400 hover:text-black transition-colors"
+        >
+          Use Sample Letters Instead
+        </button>
+      </div>
+    );
+  }
+
   if (mails.length === 0) {
     return (
       <div className="min-h-screen bg-[#E6E2D8] flex flex-col items-center justify-center font-serif text-[#5A5A5A]">
-        <p className="italic text-xl opacity-60">All letters answered.</p>
-        <button onClick={() => setMails(EMAILS)} className="mt-4 text-xs uppercase tracking-widest border-b border-stone-400 hover:text-black">
-          Check Post
-        </button>
+        {isLoadingEmails ? (
+          <>
+            <Loader2 className="w-8 h-8 animate-spin text-stone-600 mb-4" />
+            <p className="italic text-xl opacity-60">Loading your letters...</p>
+          </>
+        ) : (
+          <>
+            <p className="italic text-xl opacity-60">All letters answered.</p>
+            <button
+              onClick={() => {
+                if (useGmail && isAuthenticated) {
+                  fetchGmailEmails();
+                } else {
+                  setMails(EMAILS);
+                }
+              }}
+              className="mt-4 text-xs uppercase tracking-widest border-b border-stone-400 hover:text-black"
+            >
+              Check Post
+            </button>
+          </>
+        )}
       </div>
     );
   }
@@ -1218,6 +1317,11 @@ const App = () => {
         <p className="text-xs font-sans uppercase tracking-widest text-stone-500 mt-1">
           {getGreeting()} Mit, you have {mails.length} new mails today.
         </p>
+        {gmailError && (
+          <div className="mt-2 text-xs text-red-600 max-w-xs">
+            {gmailError}
+          </div>
+        )}
       </div>
       <div className={`absolute top-8 right-8 z-50 transition-opacity duration-700 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
          <div className="p-2 hover:bg-black/5 rounded-full cursor-pointer transition-colors">
@@ -1231,6 +1335,35 @@ const App = () => {
             </div>
             <span className="text-sm italic text-stone-700">Write Letter</span>
          </div>
+      </div>
+      <div className={`absolute bottom-8 right-8 z-50 transition-opacity duration-700 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        {!useGmail ? (
+          <button
+            onClick={async () => {
+              setUseGmail(true);
+              // If already authenticated, fetch emails immediately
+              if (gmailService.isAuthenticated()) {
+                setIsAuthenticated(true);
+                await fetchGmailEmails();
+              }
+            }}
+            className="text-xs uppercase tracking-widest text-stone-500 hover:text-stone-800 border-b border-stone-300 hover:border-stone-600 transition-colors"
+          >
+            Connect Gmail
+          </button>
+        ) : isAuthenticated ? (
+          <button
+            onClick={() => {
+              gmailService.revokeAccess();
+              setUseGmail(false);
+              setIsAuthenticated(false);
+              setMails(EMAILS);
+            }}
+            className="text-xs uppercase tracking-widest text-stone-500 hover:text-stone-800 border-b border-stone-300 hover:border-stone-600 transition-colors"
+          >
+            Disconnect
+          </button>
+        ) : null}
       </div>
 
       {/* 3. The Stack Container */}

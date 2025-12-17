@@ -128,12 +128,14 @@ const styles = `
   
   @keyframes flameRise {
     0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
-    5% { opacity: 0.3; }
-    10% { opacity: 1; transform: translateY(-5px) scale(1.05) rotate(-1deg); }
-    30% { transform: translateY(-20px) scale(1.15) rotate(-2deg); opacity: 0.95; }
-    50% { transform: translateY(-40px) scale(1.2) rotate(-3deg); opacity: 0.9; }
-    70% { transform: translateY(-60px) scale(1.1) rotate(-4deg); opacity: 0.7; }
-    100% { transform: translateY(-100px) scale(0.8) rotate(-6deg); opacity: 0; }
+    3% { opacity: 0.3; }
+    8% { opacity: 1; transform: translateY(-5px) scale(1.05) rotate(-1deg); }
+    20% { transform: translateY(-20px) scale(1.15) rotate(-2deg); opacity: 0.95; }
+    40% { transform: translateY(-40px) scale(1.2) rotate(-3deg); opacity: 0.9; }
+    60% { transform: translateY(-60px) scale(1.1) rotate(-4deg); opacity: 0.85; }
+    80% { transform: translateY(-80px) scale(0.95) rotate(-5deg); opacity: 0.7; }
+    90% { transform: translateY(-90px) scale(0.85) rotate(-5.5deg); opacity: 0.5; }
+    100% { transform: translateY(-100px) scale(0.8) rotate(-6deg); opacity: 0.3; }
   }
   
   @keyframes emberGlow {
@@ -705,6 +707,52 @@ const styles = `
   .folding-active .paper-section-3 {
     animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
+  /* Paper sections for tri-fold */
+  .paper-section {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .paper-section-1 {
+    /* Bottom third */
+    top: 66.66%;
+    height: 33.34%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-2 {
+    /* Middle third */
+    top: 33.33%;
+    height: 33.33%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-3 {
+    /* Top third */
+    top: 0%;
+    height: 33.33%;
+    transform-origin: bottom center;
+    z-index: 1;
+  }
+  
+  .folding-active .paper-section-1 {
+    animation: foldSection1 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-2 {
+    animation: foldSection2 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-3 {
+    animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   /* Crease lines with bevel effect - First crease at 2/3 mark (bottom section folds up) */
   .folding-active::before {
@@ -821,6 +869,9 @@ const PostageStamp = ({ color, initials, isRead }) => (
 );
 
 const RealisticFire = () => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:626',message:'RealisticFire component rendered',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   // Generate consistent random values for particles
   const getRandom = (seed, min, max) => {
     const x = Math.sin(seed) * 10000;
@@ -928,10 +979,19 @@ const RealisticFire = () => {
       
       {/* Main Flame Shapes - More realistic with better colors */}
       {[...Array(16)].map((_, i) => {
-        const delay = i * 0.06;
+        // Reduced delay so flames appear together (max 0.3s spread instead of 0.96s)
+        const delay = i * 0.02;
         const rightOffset = getRandom(i, 15, 75);
         const size = getRandom(i + 100, 35, 85);
         const height = getRandom(i + 200, 70, 140);
+        // Match burn duration (3s) so flames stay visible throughout
+        const flameRiseDuration = 3.0;
+        const totalTime = delay + flameRiseDuration;
+        // #region agent log
+        if (i === 0 || i === 7 || i === 15) {
+          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:696',message:'Flame particle created',data:{index:i,delay,flameRiseDuration,totalTime,willCompleteBefore3s:totalTime<3},timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+        }
+        // #endregion
         
         return (
           <div
@@ -953,7 +1013,7 @@ const RealisticFire = () => {
                 #991b1b 90%, 
                 transparent 100%)`,
               clipPath: `polygon(${getRandom(i, 30, 70)}% 100%, ${getRandom(i+10, 0, 40)}% 85%, ${getRandom(i+20, 15, 55)}% 70%, ${getRandom(i+30, 25, 65)}% 50%, ${getRandom(i+40, 35, 75)}% 30%, ${getRandom(i+50, 40, 70)}% 15%, ${getRandom(i+60, 45, 55)}% 0%)`,
-              animation: `flameRise ${getRandom(i+700, 1.2, 2.0)}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+800, 0.3, 0.5)}s infinite ease-in-out ${delay + 0.4}s`,
+              animation: `flameRise ${flameRiseDuration}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+800, 0.3, 0.5)}s infinite ease-in-out ${delay + 0.1}s`,
               transformOrigin: 'bottom center',
               filter: `blur(${getRandom(i+900, 1, 3)}px) brightness(${getRandom(i+1000, 1.0, 1.2)})`,
               opacity: 0,
@@ -965,10 +1025,13 @@ const RealisticFire = () => {
       
       {/* Large Flame Tongues - Dramatic upward flames with more detail */}
       {[...Array(10)].map((_, i) => {
-        const delay = i * 0.08 + 0.15;
+        // Reduced delay for synchronized appearance
+        const delay = i * 0.03 + 0.1;
         const rightOffset = getRandom(i + 300, 20, 70);
         const width = getRandom(i + 400, 55, 110);
         const height = getRandom(i + 500, 120, 200);
+        // Match burn duration
+        const flameRiseDuration = 3.0;
         
         return (
           <div
@@ -989,7 +1052,7 @@ const RealisticFire = () => {
                 #dc2626 90%, 
                 transparent 100%)`,
               clipPath: `polygon(${getRandom(i+600, 40, 60)}% 100%, ${getRandom(i+700, 15, 45)}% 75%, ${getRandom(i+800, 25, 55)}% 55%, ${getRandom(i+900, 30, 60)}% 35%, ${getRandom(i+1000, 35, 65)}% 20%, ${getRandom(i+1100, 40, 60)}% 8%, ${getRandom(i+1200, 45, 55)}% 0%)`,
-              animation: `flameRise ${getRandom(i+1300, 1.8, 2.5)}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+1400, 0.4, 0.6)}s infinite ease-in-out ${delay + 0.7}s`,
+              animation: `flameRise ${flameRiseDuration}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+1400, 0.4, 0.6)}s infinite ease-in-out ${delay + 0.2}s`,
               transformOrigin: 'bottom center',
               filter: `blur(${getRandom(i+1500, 2, 4)}px) brightness(${getRandom(i+1600, 1.1, 1.3)})`,
               opacity: 0,
@@ -1001,10 +1064,12 @@ const RealisticFire = () => {
       
       {/* Ember Particles - Glowing hot embers with better physics */}
       {[...Array(40)].map((_, i) => {
-        const delay = getRandom(i + 1000, 0, 1.2);
+        // Start embers earlier and ensure they last through burn
+        const delay = getRandom(i + 1000, 0, 0.5);
         const rightOffset = getRandom(i + 1100, 10, 80);
         const size = getRandom(i + 1200, 3, 14);
-        const duration = getRandom(i + 1300, 2.5, 4.5);
+        // Ensure embers last at least 3s to match burn
+        const duration = Math.max(3.0, getRandom(i + 1300, 2.5, 4.5));
         const glowSize = size * 2.5;
         
         return (
@@ -1033,10 +1098,12 @@ const RealisticFire = () => {
       
       {/* Fire Particles - Realistic rising particles like fireplace */}
       {[...Array(25)].map((_, i) => {
-        const delay = getRandom(i + 2000, 0, 2);
+        // Start particles earlier and ensure they last
+        const delay = getRandom(i + 2000, 0, 0.8);
         const rightOffset = getRandom(i + 2100, 15, 80);
         const size = getRandom(i + 2200, 30, 100);
-        const duration = getRandom(i + 2300, 1.5, 3);
+        // Ensure particles last at least 3s
+        const duration = Math.max(3.0, getRandom(i + 2300, 1.5, 3));
         const rotation = getRandom(i + 2400, -10, 10);
         
         return (
@@ -1322,10 +1389,19 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
 
   const handleBurnClick = (e) => {
     e.stopPropagation();
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1089',message:'handleBurnClick called',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     setIsBurning(true);
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1091',message:'isBurning set to true',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     
     // Match burn animation duration (3s)
     setTimeout(() => {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1094',message:'Archive timeout fired',data:{elapsed:3000,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
       onArchive();
     }, 3000);
   };
@@ -1360,6 +1436,14 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
         relative bg-[#F4F1EA] shadow-xl origin-center 
         flex flex-col overflow-hidden
         ${isBurning ? 'burning-active burning-container' : ''}
+        ${(() => {
+          // #region agent log
+          if (isBurning) {
+            fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1128',message:'Burning classes applied',data:{isBurning,hasBurningActive:true,hasBurningContainer:true,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+          }
+          // #endregion
+          return '';
+        })()}
         ${isFolding ? 'folding-active' : 'transition-all duration-700'}
       `}
       style={{
@@ -1375,7 +1459,12 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
         }),
       }}
     >
-        {isBurning && <RealisticFire />}
+        {isBurning && (() => {
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1140',message:'RealisticFire conditionally rendered',data:{isBurning:true,timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+          // #endregion
+          return <RealisticFire />;
+        })()}
         {/* Paper Grain Texture Overlay */}
         <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] z-0"></div>
 

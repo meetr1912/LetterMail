@@ -101,54 +101,95 @@ const styles = `
     20% { opacity: 1; }
     100% { opacity: 0; transform: translate(-300px, -300px); }
   }
-  /* Realistic Fire Animations */
+  /* Realistic Fire Animations - Enhanced */
   @keyframes fireEngulf {
     0% { transform: translateY(100%) scale(0.8) rotate(0deg); opacity: 0; }
-    5% { opacity: 0.3; }
+    3% { opacity: 0.2; }
+    8% { opacity: 0.5; transform: translateY(70%) scale(1.0) rotate(-1deg); }
     15% { opacity: 0.9; transform: translateY(50%) scale(1.2) rotate(-2deg); }
+    30% { opacity: 1; transform: translateY(20%) scale(1.5) rotate(-3deg); }
     50% { opacity: 1; transform: translateY(-20%) scale(1.8) rotate(-5deg); }
-    100% { transform: translateY(-100%) scale(2.5) rotate(-8deg); opacity: 0.3; }
+    70% { opacity: 0.9; transform: translateY(-50%) scale(2.0) rotate(-6deg); }
+    100% { transform: translateY(-100%) scale(2.5) rotate(-8deg); opacity: 0.4; }
   }
   
   @keyframes flameFlicker {
-    0%, 100% { transform: scaleY(1) scaleX(1) translateX(0); opacity: 1; }
-    25% { transform: scaleY(1.1) scaleX(0.95) translateX(-2px); opacity: 0.9; }
-    50% { transform: scaleY(0.95) scaleX(1.05) translateX(2px); opacity: 1; }
-    75% { transform: scaleY(1.05) scaleX(0.98) translateX(-1px); opacity: 0.95; }
+    0%, 100% { transform: scaleY(1) scaleX(1) translateX(0) rotate(0deg); opacity: 1; }
+    10% { transform: scaleY(1.15) scaleX(0.92) translateX(-3px) rotate(-1deg); opacity: 0.95; }
+    20% { transform: scaleY(0.92) scaleX(1.08) translateX(3px) rotate(1deg); opacity: 1; }
+    30% { transform: scaleY(1.08) scaleX(0.96) translateX(-2px) rotate(-0.5deg); opacity: 0.98; }
+    40% { transform: scaleY(0.96) scaleX(1.04) translateX(2px) rotate(0.5deg); opacity: 1; }
+    50% { transform: scaleY(1.12) scaleX(0.94) translateX(-2.5px) rotate(-1deg); opacity: 0.97; }
+    60% { transform: scaleY(0.94) scaleX(1.06) translateX(2.5px) rotate(1deg); opacity: 1; }
+    70% { transform: scaleY(1.06) scaleX(0.98) translateX(-1.5px) rotate(-0.5deg); opacity: 0.99; }
+    80% { transform: scaleY(0.98) scaleX(1.02) translateX(1.5px) rotate(0.5deg); opacity: 1; }
+    90% { transform: scaleY(1.04) scaleX(0.99) translateX(-1px) rotate(-0.3deg); opacity: 0.98; }
   }
   
   @keyframes flameRise {
     0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    50% { transform: translateY(-30px) scale(1.2) rotate(-3deg); opacity: 0.9; }
-    100% { transform: translateY(-80px) scale(0.8) rotate(-6deg); opacity: 0; }
+    5% { opacity: 0.3; }
+    10% { opacity: 1; transform: translateY(-5px) scale(1.05) rotate(-1deg); }
+    30% { transform: translateY(-20px) scale(1.15) rotate(-2deg); opacity: 0.95; }
+    50% { transform: translateY(-40px) scale(1.2) rotate(-3deg); opacity: 0.9; }
+    70% { transform: translateY(-60px) scale(1.1) rotate(-4deg); opacity: 0.7; }
+    100% { transform: translateY(-100px) scale(0.8) rotate(-6deg); opacity: 0; }
   }
   
   @keyframes emberGlow {
-    0%, 100% { opacity: 0.8; transform: scale(1); filter: brightness(1); }
-    50% { opacity: 1; transform: scale(1.1); filter: brightness(1.3); }
+    0%, 100% { opacity: 0.9; transform: scale(1); filter: brightness(1) drop-shadow(0 0 3px rgba(255,140,0,0.8)); }
+    25% { opacity: 1; transform: scale(1.15); filter: brightness(1.4) drop-shadow(0 0 6px rgba(255,200,0,1)); }
+    50% { opacity: 1; transform: scale(1.2); filter: brightness(1.5) drop-shadow(0 0 8px rgba(255,220,0,1)); }
+    75% { opacity: 0.95; transform: scale(1.1); filter: brightness(1.3) drop-shadow(0 0 5px rgba(255,180,0,0.9)); }
   }
   
   @keyframes emberFloat {
     0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-40px, -120px) rotate(360deg); opacity: 0; }
+    20% { transform: translate(-8px, -20px) rotate(72deg); opacity: 1; }
+    40% { transform: translate(-18px, -50px) rotate(144deg); opacity: 0.9; }
+    60% { transform: translate(-28px, -80px) rotate(216deg); opacity: 0.7; }
+    80% { transform: translate(-36px, -110px) rotate(288deg); opacity: 0.4; }
+    100% { transform: translate(-45px, -140px) rotate(360deg); opacity: 0; }
+  }
+  
+  @keyframes sparkPop {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    10% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+    30% { transform: scale(1) rotate(360deg); opacity: 1; }
+    100% { transform: scale(0.3) rotate(720deg); opacity: 0; }
   }
   
   @keyframes smokeRise {
-    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
-    30% { transform: translateY(-40px) translateX(10px) scale(1.3); opacity: 0.8; }
-    100% { transform: translateY(-200px) translateX(30px) scale(2.5); opacity: 0; }
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0.7; }
+    15% { transform: translateY(-20px) translateX(5px) scale(1.1) rotate(5deg); opacity: 0.8; }
+    30% { transform: translateY(-50px) translateX(12px) scale(1.3) rotate(10deg); opacity: 0.85; }
+    50% { transform: translateY(-100px) translateX(20px) scale(1.6) rotate(15deg); opacity: 0.7; }
+    70% { transform: translateY(-150px) translateX(25px) scale(2.0) rotate(20deg); opacity: 0.5; }
+    100% { transform: translateY(-250px) translateX(35px) scale(3.0) rotate(25deg); opacity: 0; }
   }
   
   @keyframes charSpread {
     0% { transform: scale(0.5); opacity: 0; }
-    20% { opacity: 0.4; }
-    100% { transform: scale(1.5); opacity: 0.8; }
+    10% { opacity: 0.2; }
+    20% { opacity: 0.4; transform: scale(0.8); }
+    40% { opacity: 0.6; transform: scale(1.1); }
+    60% { opacity: 0.7; transform: scale(1.3); }
+    100% { transform: scale(1.8); opacity: 0.85; }
   }
   
   @keyframes heatDistortion {
-    0%, 100% { transform: translateY(0) scaleY(1); }
-    50% { transform: translateY(-5px) scaleY(1.05); }
+    0%, 100% { transform: translateY(0) scaleY(1) scaleX(1); opacity: 0.4; }
+    25% { transform: translateY(-3px) scaleY(1.08) scaleX(0.98); opacity: 0.5; }
+    50% { transform: translateY(-6px) scaleY(1.12) scaleX(0.96); opacity: 0.6; }
+    75% { transform: translateY(-3px) scaleY(1.06) scaleX(0.99); opacity: 0.5; }
+  }
+  
+  @keyframes paperBurnEdge {
+    0% { opacity: 0; transform: scaleX(0); }
+    20% { opacity: 0.3; }
+    40% { opacity: 0.6; transform: scaleX(0.5); }
+    60% { opacity: 0.8; transform: scaleX(0.8); }
+    100% { opacity: 1; transform: scaleX(1); }
   }
   .burning-container {
     /* Create a jagged burn edge using a gradient mask */
@@ -162,17 +203,100 @@ const styles = `
   .burning-active {
     animation: burnMask 2.5s forwards linear;
   }
-  /* --- FOLD ANIMATION --- */
+  /* --- FOLD ANIMATION (ENHANCED) --- */
   
-  /* Simulates the paper tilting back and being placed down */
+  /* Simulates the paper lifting slightly, creasing, and then dropping back */
   @keyframes fold3D {
-    0% { transform: translateY(0) rotateX(0deg) scale(1); opacity: 1; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-    40% { transform: translateY(10px) rotateX(-20deg) scale(0.95); opacity: 1; }
-    100% { transform: translateY(200px) rotateX(-60deg) scale(0.6); opacity: 0; box-shadow: 0 0 0 0 transparent; }
+    0% { 
+      transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1); 
+      opacity: 1; 
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+    /* Anticipation: slight tilt towards user before fold */
+    15% { 
+      transform: perspective(1000px) rotateX(8deg) translateY(-8px) scale(1.02); 
+      opacity: 1;
+      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3);
+    }
+    30% { 
+      transform: perspective(1000px) rotateX(5deg) translateY(-20px) scale(1.02); 
+      opacity: 1;
+    }
+    /* Snap back and fold */
+    40% { 
+      transform: perspective(1000px) rotateX(-20deg) translateY(10px) scale(0.95); 
+      opacity: 1;
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+    }
+    100% { 
+      /* The snap away */
+      transform: perspective(1000px) rotateX(-30deg) translateY(400px) scale(0.7); 
+      opacity: 0; 
+      box-shadow: 0 0 0 0 transparent;
+    }
   }
+
+  /* Animate shadow creases appearing as the paper bends */
+  @keyframes creaseAppear {
+    0% { opacity: 0; transform: scaleX(0.8); }
+    30% { opacity: 0; }
+    40% { opacity: 0.6; transform: scaleX(1); }
+    70% { opacity: 0.8; }
+    100% { opacity: 0; transform: scaleX(1.1); }
+  }
+
   .folding-active {
-    transform-origin: bottom center;
-    animation: fold3D 0.7s forwards ease-in;
+    transform-origin: center bottom;
+    animation: fold3D 0.8s forwards cubic-bezier(0.5, 0, 0.2, 1);
+    position: relative;
+  }
+
+  /* Crease lines with bevel effect - First crease at 1/3 mark */
+  .folding-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 33.33%;
+    height: 2px;
+    pointer-events: none;
+    z-index: 100;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0,0,0,0.15) 10%,
+      rgba(0,0,0,0.25) 50%,
+      rgba(0,0,0,0.15) 90%,
+      transparent 100%
+    );
+    box-shadow: 
+      0 1px 2px rgba(0,0,0,0.1) inset,
+      0 -1px 1px rgba(255,255,255,0.3) inset;
+    animation: creaseAppear 0.8s forwards ease-in;
+  }
+
+  /* Second crease at 2/3 mark - tri-fold effect */
+  .folding-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 66.66%;
+    height: 2px;
+    pointer-events: none;
+    z-index: 100;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0,0,0,0.15) 10%,
+      rgba(0,0,0,0.25) 50%,
+      rgba(0,0,0,0.15) 90%,
+      transparent 100%
+    );
+    box-shadow: 
+      0 1px 2px rgba(0,0,0,0.1) inset,
+      0 -1px 1px rgba(255,255,255,0.3) inset;
+    animation: creaseAppear 0.8s forwards ease-in 0.05s;
   }
   
   /* Custom Scrollbar */
@@ -240,62 +364,87 @@ const RealisticFire = () => {
 
   return (
     <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
-      {/* Heat Distortion Layer */}
+      {/* Enhanced Heat Distortion Layer - More intense */}
       <div 
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-40"
         style={{
-          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,100,0,0.1) 40%, rgba(255,50,0,0.2) 60%)',
-          animation: 'heatDistortion 0.3s infinite ease-in-out',
-          mixBlendMode: 'overlay'
+          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,150,0,0.15) 30%, rgba(255,100,0,0.25) 50%, rgba(255,50,0,0.3) 70%)',
+          animation: 'heatDistortion 0.25s infinite ease-in-out',
+          mixBlendMode: 'overlay',
+          filter: 'blur(2px)'
         }}
       />
       
-      {/* Base Fire Core - Intense orange/red center */}
+      {/* Base Fire Core - Intense orange/red center with better gradient */}
+      <div 
+        className="absolute w-[220%] h-[220%]"
+        style={{ 
+          bottom: '-60%', 
+          right: '-60%',
+          background: 'radial-gradient(ellipse, #ffd700 0%, #ff8c00 15%, #ff6b00 30%, #ff4500 45%, #dc2626 60%, #991b1b 75%, #7f1d1d 85%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out',
+          mixBlendMode: 'hard-light',
+          filter: 'blur(25px) brightness(1.1)'
+        }}
+      />
+      
+      {/* Secondary Fire Layer - More spread with yellow core */}
       <div 
         className="absolute w-[200%] h-[200%]"
         style={{ 
           bottom: '-50%', 
           right: '-50%',
-          background: 'radial-gradient(ellipse, #ff6b00 0%, #ff4500 25%, #dc2626 50%, #991b1b 75%, transparent 100%)',
-          animation: 'fireEngulf 2.5s forwards ease-out',
-          mixBlendMode: 'hard-light',
-          filter: 'blur(20px)'
+          background: 'radial-gradient(ellipse, #ffed4e 0%, #ffd700 20%, #ff8c00 40%, #ff6b00 55%, #ff4500 70%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out 0.1s',
+          mixBlendMode: 'screen',
+          filter: 'blur(18px) brightness(1.15)'
         }}
       />
       
-      {/* Secondary Fire Layer - More spread */}
+      {/* Tertiary Fire Layer - Outer glow */}
       <div 
         className="absolute w-[180%] h-[180%]"
         style={{ 
           bottom: '-40%', 
           right: '-40%',
-          background: 'radial-gradient(ellipse, #ff8c00 0%, #ff6b00 30%, #ff4500 60%, transparent 100%)',
-          animation: 'fireEngulf 2.5s forwards ease-out 0.15s',
+          background: 'radial-gradient(ellipse, rgba(255,200,0,0.4) 0%, rgba(255,140,0,0.3) 30%, rgba(255,69,0,0.2) 60%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out 0.2s',
           mixBlendMode: 'screen',
-          filter: 'blur(15px)'
+          filter: 'blur(30px)'
         }}
       />
       
-      {/* Charring/Ash Layer - Dark center spreading */}
+      {/* Charring/Ash Layer - Dark center spreading with more detail */}
       <div 
-        className="absolute w-[160%] h-[160%]"
+        className="absolute w-[170%] h-[170%]"
         style={{ 
-          bottom: '-30%', 
-          right: '-30%',
-          background: 'radial-gradient(ellipse, #000000 0%, #1a0000 30%, #330000 60%, transparent 100%)',
+          bottom: '-35%', 
+          right: '-35%',
+          background: 'radial-gradient(ellipse, #000000 0%, #1a0000 20%, #330000 40%, #4d0000 55%, #660000 70%, transparent 100%)',
           animation: 'charSpread 2.5s forwards ease-out',
           mixBlendMode: 'multiply',
-          filter: 'blur(25px)',
-          opacity: 0.7
+          filter: 'blur(30px)',
+          opacity: 0.8
         }}
       />
       
-      {/* Main Flame Shapes - Realistic flame forms */}
-      {[...Array(12)].map((_, i) => {
-        const delay = i * 0.08;
-        const rightOffset = getRandom(i, 20, 70);
-        const size = getRandom(i + 100, 40, 80);
-        const height = getRandom(i + 200, 60, 120);
+      {/* Paper Edge Burn Effect - Realistic charring at edge */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, transparent 55%, rgba(139,69,19,0.3) 65%, rgba(101,67,33,0.5) 75%, rgba(60,30,15,0.7) 85%, rgba(30,15,8,0.6) 92%, transparent 100%)',
+          animation: 'paperBurnEdge 2.5s forwards ease-out',
+          mixBlendMode: 'multiply',
+          filter: 'blur(3px)'
+        }}
+      />
+      
+      {/* Main Flame Shapes - More realistic with better colors */}
+      {[...Array(16)].map((_, i) => {
+        const delay = i * 0.06;
+        const rightOffset = getRandom(i, 15, 75);
+        const size = getRandom(i + 100, 35, 85);
+        const height = getRandom(i + 200, 70, 140);
         
         return (
           <div
@@ -307,28 +456,32 @@ const RealisticFire = () => {
               bottom: '0%',
               right: `${rightOffset}%`,
               background: `linear-gradient(to top, 
-                #ffd700 0%, 
-                #ff8c00 20%, 
-                #ff4500 40%, 
-                #dc2626 60%, 
-                #991b1b 80%, 
+                #ffed4e 0%, 
+                #ffd700 10%, 
+                #ffb347 20%, 
+                #ff8c00 35%, 
+                #ff6b00 50%, 
+                #ff4500 65%, 
+                #dc2626 80%, 
+                #991b1b 90%, 
                 transparent 100%)`,
-              clipPath: `polygon(${getRandom(i, 30, 70)}% 100%, ${getRandom(i+10, 0, 40)}% 80%, ${getRandom(i+20, 20, 60)}% 60%, ${getRandom(i+30, 40, 80)}% 40%, ${getRandom(i+40, 30, 70)}% 20%, ${getRandom(i+50, 45, 55)}% 0%)`,
-              animation: `flameRise 1.5s forwards ease-out ${delay}s, flameFlicker 0.4s infinite ease-in-out ${delay + 0.5}s`,
+              clipPath: `polygon(${getRandom(i, 30, 70)}% 100%, ${getRandom(i+10, 0, 40)}% 85%, ${getRandom(i+20, 15, 55)}% 70%, ${getRandom(i+30, 25, 65)}% 50%, ${getRandom(i+40, 35, 75)}% 30%, ${getRandom(i+50, 40, 70)}% 15%, ${getRandom(i+60, 45, 55)}% 0%)`,
+              animation: `flameRise ${getRandom(i+700, 1.2, 2.0)}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+800, 0.3, 0.5)}s infinite ease-in-out ${delay + 0.4}s`,
               transformOrigin: 'bottom center',
-              filter: 'blur(2px)',
-              opacity: 0
+              filter: `blur(${getRandom(i+900, 1, 3)}px) brightness(${getRandom(i+1000, 1.0, 1.2)})`,
+              opacity: 0,
+              mixBlendMode: 'screen'
             }}
           />
         );
       })}
       
-      {/* Large Flame Tongues - Dramatic upward flames */}
-      {[...Array(8)].map((_, i) => {
-        const delay = i * 0.1 + 0.2;
-        const rightOffset = getRandom(i + 300, 25, 65);
-        const width = getRandom(i + 400, 50, 100);
-        const height = getRandom(i + 500, 100, 180);
+      {/* Large Flame Tongues - Dramatic upward flames with more detail */}
+      {[...Array(10)].map((_, i) => {
+        const delay = i * 0.08 + 0.15;
+        const rightOffset = getRandom(i + 300, 20, 70);
+        const width = getRandom(i + 400, 55, 110);
+        const height = getRandom(i + 500, 120, 200);
         
         return (
           <div
@@ -340,15 +493,18 @@ const RealisticFire = () => {
               bottom: '0%',
               right: `${rightOffset}%`,
               background: `radial-gradient(ellipse at bottom, 
-                #ffd700 0%, 
-                #ff8c00 25%, 
-                #ff4500 50%, 
-                #dc2626 75%, 
+                #ffed4e 0%, 
+                #ffd700 15%, 
+                #ffb347 30%, 
+                #ff8c00 45%, 
+                #ff6b00 60%, 
+                #ff4500 75%, 
+                #dc2626 90%, 
                 transparent 100%)`,
-              clipPath: `polygon(${getRandom(i+600, 40, 60)}% 100%, ${getRandom(i+700, 20, 40)}% 70%, ${getRandom(i+800, 30, 50)}% 40%, ${getRandom(i+900, 40, 60)}% 10%, ${getRandom(i+1000, 45, 55)}% 0%)`,
-              animation: `flameRise 2s forwards ease-out ${delay}s, flameFlicker 0.5s infinite ease-in-out ${delay + 0.8}s`,
+              clipPath: `polygon(${getRandom(i+600, 40, 60)}% 100%, ${getRandom(i+700, 15, 45)}% 75%, ${getRandom(i+800, 25, 55)}% 55%, ${getRandom(i+900, 30, 60)}% 35%, ${getRandom(i+1000, 35, 65)}% 20%, ${getRandom(i+1100, 40, 60)}% 8%, ${getRandom(i+1200, 45, 55)}% 0%)`,
+              animation: `flameRise ${getRandom(i+1300, 1.8, 2.5)}s forwards ease-out ${delay}s, flameFlicker ${getRandom(i+1400, 0.4, 0.6)}s infinite ease-in-out ${delay + 0.7}s`,
               transformOrigin: 'bottom center',
-              filter: 'blur(3px)',
+              filter: `blur(${getRandom(i+1500, 2, 4)}px) brightness(${getRandom(i+1600, 1.1, 1.3)})`,
               opacity: 0,
               mixBlendMode: 'screen'
             }}
@@ -356,12 +512,13 @@ const RealisticFire = () => {
         );
       })}
       
-      {/* Ember Particles - Glowing hot embers */}
-      {[...Array(30)].map((_, i) => {
-        const delay = getRandom(i + 1000, 0, 1);
-        const rightOffset = getRandom(i + 1100, 15, 75);
-        const size = getRandom(i + 1200, 4, 12);
-        const duration = getRandom(i + 1300, 2, 4);
+      {/* Ember Particles - Glowing hot embers with better physics */}
+      {[...Array(40)].map((_, i) => {
+        const delay = getRandom(i + 1000, 0, 1.2);
+        const rightOffset = getRandom(i + 1100, 10, 80);
+        const size = getRandom(i + 1200, 3, 14);
+        const duration = getRandom(i + 1300, 2.5, 4.5);
+        const glowSize = size * 2.5;
         
         return (
           <div
@@ -372,10 +529,42 @@ const RealisticFire = () => {
               height: `${size}px`,
               bottom: '0%',
               right: `${rightOffset}%`,
-              background: `radial-gradient(circle, #ffd700 0%, #ff8c00 50%, #ff4500 100%)`,
-              boxShadow: `0 0 ${size * 2}px #ff8c00, 0 0 ${size * 3}px #ff4500`,
-              animation: `emberFloat ${duration}s forwards ease-out ${delay}s, emberGlow 0.8s infinite ease-in-out ${delay + 0.3}s`,
-              opacity: 0
+              background: `radial-gradient(circle, #ffed4e 0%, #ffd700 30%, #ffb347 60%, #ff8c00 85%, #ff4500 100%)`,
+              boxShadow: `
+                0 0 ${glowSize}px rgba(255,215,0,0.9),
+                0 0 ${glowSize * 1.5}px rgba(255,140,0,0.7),
+                0 0 ${glowSize * 2}px rgba(255,69,0,0.5),
+                inset 0 0 ${size * 0.5}px rgba(255,255,200,0.8)
+              `,
+              animation: `emberFloat ${duration}s forwards ease-out ${delay}s, emberGlow ${getRandom(i+1700, 0.6, 1.0)}s infinite ease-in-out ${delay + 0.2}s`,
+              opacity: 0,
+              filter: 'brightness(1.2)'
+            }}
+          />
+        );
+      })}
+      
+      {/* Spark Particles - Quick popping sparks */}
+      {[...Array(20)].map((_, i) => {
+        const delay = getRandom(i + 2000, 0.2, 1.5);
+        const rightOffset = getRandom(i + 2100, 20, 70);
+        const size = getRandom(i + 2200, 2, 6);
+        const duration = getRandom(i + 2300, 0.4, 0.8);
+        
+        return (
+          <div
+            key={`spark-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              bottom: `${getRandom(i + 2400, 0, 15)}%`,
+              right: `${rightOffset}%`,
+              background: `radial-gradient(circle, #ffffff 0%, #ffed4e 50%, #ff8c00 100%)`,
+              boxShadow: `0 0 ${size * 4}px rgba(255,215,0,1), 0 0 ${size * 6}px rgba(255,140,0,0.8)`,
+              animation: `sparkPop ${duration}s forwards ease-out ${delay}s`,
+              opacity: 0,
+              filter: 'brightness(1.5)'
             }}
           />
         );
@@ -621,7 +810,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 600);
+    }, 800); // Match fold animation duration
   };
 
   const handleReplyClick = (e) => {
@@ -636,7 +825,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 600);
+    }, 800); // Match fold animation duration
   };
 
   return (

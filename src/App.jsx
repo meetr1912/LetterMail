@@ -191,6 +191,67 @@ const styles = `
     60% { opacity: 0.8; transform: scaleX(0.8); }
     100% { opacity: 1; transform: scaleX(1); }
   }
+  
+  /* CSS-Only Fire Animation using glitter texture - Ultra realistic */
+  @keyframes cssFire {
+    0% {
+      background-position: center 0px, center 0px, 50% 100%, center center;
+    }
+    100% {
+      background-position: center -500px, center -650px, 50% 100%, center center;
+    }
+  }
+  
+  .css-fire-base {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      url("https://assets.codepen.io/13471/silver-glitter-background.png"),
+      url("https://assets.codepen.io/13471/silver-glitter-background.png"),
+      linear-gradient(
+        0deg,
+        white 0px,
+        #ff8951 5px,
+        #dcbc169c 30%,
+        transparent 70%
+      ),
+      radial-gradient(ellipse at bottom, transparent 30%, black 60%);
+    background-size: 350px 500px, 400px 650px, 100% 100%, 100% 100%;
+    background-blend-mode: hard-light, color-dodge, multiply;
+    background-position: center 0px, center 0px, 50% 100%, center center;
+    background-repeat: repeat, repeat, repeat, no-repeat;
+    mix-blend-mode: color-dodge;
+    filter: brightness(3.7) blur(7px) contrast(6);
+    animation: cssFire 1.75s linear infinite;
+    box-shadow: inset 0 -40px 50px -60px #63bbc5;
+    pointer-events: none;
+    z-index: 51;
+    transform-origin: bottom right;
+  }
+  
+  .css-fire-base::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+      url("https://assets.codepen.io/13471/silver-glitter-background.png"),
+      linear-gradient(
+        0deg,
+        rgba(255,255,255,0.8) 0px,
+        #ff6b00 8px,
+        #ff4500 25%,
+        #dc2626 50%,
+        transparent 75%
+      );
+    background-size: 300px 450px, 100% 100%;
+    background-blend-mode: screen, multiply;
+    background-position: center 0px, 50% 100%;
+    background-repeat: repeat, no-repeat;
+    mix-blend-mode: screen;
+    filter: brightness(2.5) blur(5px) contrast(4);
+    animation: cssFire 1.5s linear infinite reverse;
+    opacity: 0.7;
+  }
   .burning-container {
     /* Create a jagged burn edge using a gradient mask */
     -webkit-mask-image: radial-gradient(circle at bottom right, transparent 30%, black 50%);
@@ -364,6 +425,13 @@ const RealisticFire = () => {
 
   return (
     <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
+      {/* CSS-Only Fire Base Layer - Ultra realistic using glitter texture */}
+      <div className="css-fire-base" style={{
+        transform: 'scale(1.3) translate(8%, 5%)',
+        transformOrigin: 'bottom right',
+        opacity: 0.95
+      }} />
+      
       {/* Enhanced Heat Distortion Layer - More intense */}
       <div 
         className="absolute inset-0 opacity-40"
@@ -371,7 +439,8 @@ const RealisticFire = () => {
           background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,150,0,0.15) 30%, rgba(255,100,0,0.25) 50%, rgba(255,50,0,0.3) 70%)',
           animation: 'heatDistortion 0.25s infinite ease-in-out',
           mixBlendMode: 'overlay',
-          filter: 'blur(2px)'
+          filter: 'blur(2px)',
+          zIndex: 52
         }}
       />
       

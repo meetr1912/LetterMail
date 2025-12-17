@@ -221,12 +221,13 @@ const styles = `
     background-position: center 0px, center 0px, 50% 100%, center center;
     background-repeat: repeat, repeat, repeat, no-repeat;
     mix-blend-mode: color-dodge;
-    filter: brightness(3.7) blur(7px) contrast(6);
+    filter: brightness(4.2) blur(8px) contrast(7) saturate(1.2);
     animation: cssFire 1.75s linear infinite;
-    box-shadow: inset 0 -40px 50px -60px #63bbc5;
+    box-shadow: inset 0 -40px 50px -60px #63bbc5, 0 0 100px rgba(255,140,0,0.5);
     pointer-events: none;
     z-index: 51;
     transform-origin: bottom right;
+    opacity: 1;
   }
   
   .css-fire-base::before {
@@ -237,7 +238,7 @@ const styles = `
       url("https://assets.codepen.io/13471/silver-glitter-background.png"),
       linear-gradient(
         0deg,
-        rgba(255,255,255,0.8) 0px,
+        rgba(255,255,255,0.9) 0px,
         #ff6b00 8px,
         #ff4500 25%,
         #dc2626 50%,
@@ -248,9 +249,24 @@ const styles = `
     background-position: center 0px, 50% 100%;
     background-repeat: repeat, no-repeat;
     mix-blend-mode: screen;
-    filter: brightness(2.5) blur(5px) contrast(4);
+    filter: brightness(3) blur(6px) contrast(5) saturate(1.3);
     animation: cssFire 1.5s linear infinite reverse;
-    opacity: 0.7;
+    opacity: 0.85;
+  }
+  
+  .css-fire-base::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at bottom right, 
+      rgba(255,200,0,0.4) 0%, 
+      rgba(255,140,0,0.3) 30%, 
+      rgba(255,69,0,0.2) 60%, 
+      transparent 100%);
+    mix-blend-mode: overlay;
+    filter: blur(10px) brightness(1.5);
+    animation: cssFire 2s linear infinite;
+    opacity: 0.9;
   }
   .burning-container {
     /* Create a jagged burn edge using a gradient mask */
@@ -264,34 +280,48 @@ const styles = `
   .burning-active {
     animation: burnMask 2.5s forwards linear;
   }
-  /* --- FOLD ANIMATION (ENHANCED) --- */
+  /* --- FOLD ANIMATION (REALISTIC PAPER FOLD) --- */
   
-  /* Simulates the paper lifting slightly, creasing, and then dropping back */
+  /* Simulates realistic paper folding - smooth, clean creases */
   @keyframes fold3D {
     0% { 
-      transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1); 
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0) scale(1); 
       opacity: 1; 
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
     }
-    /* Anticipation: slight tilt towards user before fold */
-    15% { 
-      transform: perspective(1000px) rotateX(8deg) translateY(-8px) scale(1.02); 
+    /* Gentle lift - like picking up paper */
+    10% { 
+      transform: perspective(1200px) rotateX(3deg) rotateY(0deg) translateY(-5px) translateZ(10px) scale(1.01); 
       opacity: 1;
-      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3);
+      box-shadow: 0 28px 55px -10px rgba(0,0,0,0.28);
     }
-    30% { 
-      transform: perspective(1000px) rotateX(5deg) translateY(-20px) scale(1.02); 
+    /* Start folding - paper begins to crease */
+    25% { 
+      transform: perspective(1200px) rotateX(15deg) rotateY(-2deg) translateY(0px) translateZ(5px) scale(0.98); 
       opacity: 1;
+      box-shadow: 0 20px 40px -8px rgba(0,0,0,0.22);
     }
-    /* Snap back and fold */
+    /* Mid-fold - paper is creasing */
     40% { 
-      transform: perspective(1000px) rotateX(-20deg) translateY(10px) scale(0.95); 
+      transform: perspective(1200px) rotateX(35deg) rotateY(-3deg) translateY(15px) translateZ(-10px) scale(0.92); 
       opacity: 1;
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+      box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2);
+    }
+    /* Folded - paper is now in tri-fold position */
+    60% { 
+      transform: perspective(1200px) rotateX(60deg) rotateY(-2deg) translateY(50px) translateZ(-30px) scale(0.85); 
+      opacity: 0.95;
+      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.15);
+    }
+    /* Moving away - folded paper slides down */
+    80% { 
+      transform: perspective(1200px) rotateX(75deg) rotateY(-1deg) translateY(150px) translateZ(-50px) scale(0.75); 
+      opacity: 0.7;
+      box-shadow: 0 5px 10px -2px rgba(0,0,0,0.1);
     }
     100% { 
-      /* The snap away */
-      transform: perspective(1000px) rotateX(-30deg) translateY(400px) scale(0.7); 
+      /* Final position - paper is folded and moved away */
+      transform: perspective(1200px) rotateX(85deg) rotateY(0deg) translateY(300px) translateZ(-80px) scale(0.65); 
       opacity: 0; 
       box-shadow: 0 0 0 0 transparent;
     }
@@ -299,16 +329,17 @@ const styles = `
 
   /* Animate shadow creases appearing as the paper bends */
   @keyframes creaseAppear {
-    0% { opacity: 0; transform: scaleX(0.8); }
-    30% { opacity: 0; }
-    40% { opacity: 0.6; transform: scaleX(1); }
-    70% { opacity: 0.8; }
-    100% { opacity: 0; transform: scaleX(1.1); }
+    0% { opacity: 0; transform: scaleX(0.9); }
+    20% { opacity: 0.2; transform: scaleX(0.95); }
+    30% { opacity: 0.5; transform: scaleX(1); }
+    50% { opacity: 0.8; transform: scaleX(1); }
+    70% { opacity: 0.9; transform: scaleX(1.05); }
+    100% { opacity: 0.6; transform: scaleX(1.1); }
   }
 
   .folding-active {
     transform-origin: center bottom;
-    animation: fold3D 0.8s forwards cubic-bezier(0.5, 0, 0.2, 1);
+    animation: fold3D 1.2s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
   }
 
@@ -333,7 +364,7 @@ const styles = `
     box-shadow: 
       0 1px 2px rgba(0,0,0,0.1) inset,
       0 -1px 1px rgba(255,255,255,0.3) inset;
-    animation: creaseAppear 0.8s forwards ease-in;
+    animation: creaseAppear 1.2s forwards ease-in;
   }
 
   /* Second crease at 2/3 mark - tri-fold effect */
@@ -427,73 +458,35 @@ const RealisticFire = () => {
     <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
       {/* CSS-Only Fire Base Layer - Ultra realistic using glitter texture */}
       <div className="css-fire-base" style={{
-        transform: 'scale(1.3) translate(8%, 5%)',
+        transform: 'scale(1.4) translate(5%, 3%)',
         transformOrigin: 'bottom right',
-        opacity: 0.95
+        opacity: 1
       }} />
       
       {/* Enhanced Heat Distortion Layer - More intense */}
       <div 
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-50"
         style={{
-          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,150,0,0.15) 30%, rgba(255,100,0,0.25) 50%, rgba(255,50,0,0.3) 70%)',
-          animation: 'heatDistortion 0.25s infinite ease-in-out',
+          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,200,0,0.2) 25%, rgba(255,150,0,0.3) 40%, rgba(255,100,0,0.4) 60%, rgba(255,50,0,0.35) 80%)',
+          animation: 'heatDistortion 0.2s infinite ease-in-out',
           mixBlendMode: 'overlay',
-          filter: 'blur(2px)',
+          filter: 'blur(3px)',
           zIndex: 52
         }}
       />
       
-      {/* Base Fire Core - Intense orange/red center with better gradient */}
+      {/* Charring/Ash Layer - Dark center spreading */}
       <div 
-        className="absolute w-[220%] h-[220%]"
+        className="absolute w-[160%] h-[160%]"
         style={{ 
-          bottom: '-60%', 
-          right: '-60%',
-          background: 'radial-gradient(ellipse, #ffd700 0%, #ff8c00 15%, #ff6b00 30%, #ff4500 45%, #dc2626 60%, #991b1b 75%, #7f1d1d 85%, transparent 100%)',
-          animation: 'fireEngulf 2.5s forwards ease-out',
-          mixBlendMode: 'hard-light',
-          filter: 'blur(25px) brightness(1.1)'
-        }}
-      />
-      
-      {/* Secondary Fire Layer - More spread with yellow core */}
-      <div 
-        className="absolute w-[200%] h-[200%]"
-        style={{ 
-          bottom: '-50%', 
-          right: '-50%',
-          background: 'radial-gradient(ellipse, #ffed4e 0%, #ffd700 20%, #ff8c00 40%, #ff6b00 55%, #ff4500 70%, transparent 100%)',
-          animation: 'fireEngulf 2.5s forwards ease-out 0.1s',
-          mixBlendMode: 'screen',
-          filter: 'blur(18px) brightness(1.15)'
-        }}
-      />
-      
-      {/* Tertiary Fire Layer - Outer glow */}
-      <div 
-        className="absolute w-[180%] h-[180%]"
-        style={{ 
-          bottom: '-40%', 
-          right: '-40%',
-          background: 'radial-gradient(ellipse, rgba(255,200,0,0.4) 0%, rgba(255,140,0,0.3) 30%, rgba(255,69,0,0.2) 60%, transparent 100%)',
-          animation: 'fireEngulf 2.5s forwards ease-out 0.2s',
-          mixBlendMode: 'screen',
-          filter: 'blur(30px)'
-        }}
-      />
-      
-      {/* Charring/Ash Layer - Dark center spreading with more detail */}
-      <div 
-        className="absolute w-[170%] h-[170%]"
-        style={{ 
-          bottom: '-35%', 
-          right: '-35%',
-          background: 'radial-gradient(ellipse, #000000 0%, #1a0000 20%, #330000 40%, #4d0000 55%, #660000 70%, transparent 100%)',
+          bottom: '-30%', 
+          right: '-30%',
+          background: 'radial-gradient(ellipse, #000000 0%, #1a0000 25%, #330000 45%, #4d0000 60%, transparent 80%)',
           animation: 'charSpread 2.5s forwards ease-out',
           mixBlendMode: 'multiply',
-          filter: 'blur(30px)',
-          opacity: 0.8
+          filter: 'blur(25px)',
+          opacity: 0.75,
+          zIndex: 53
         }}
       />
       
@@ -501,10 +494,11 @@ const RealisticFire = () => {
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(135deg, transparent 55%, rgba(139,69,19,0.3) 65%, rgba(101,67,33,0.5) 75%, rgba(60,30,15,0.7) 85%, rgba(30,15,8,0.6) 92%, transparent 100%)',
+          background: 'linear-gradient(135deg, transparent 50%, rgba(139,69,19,0.4) 60%, rgba(101,67,33,0.6) 70%, rgba(60,30,15,0.8) 80%, rgba(30,15,8,0.7) 90%, transparent 100%)',
           animation: 'paperBurnEdge 2.5s forwards ease-out',
           mixBlendMode: 'multiply',
-          filter: 'blur(3px)'
+          filter: 'blur(4px)',
+          zIndex: 54
         }}
       />
       
@@ -879,7 +873,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 800); // Match fold animation duration
+    }, 1200); // Match fold animation duration
   };
 
   const handleReplyClick = (e) => {
@@ -894,7 +888,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 800); // Match fold animation duration
+    }, 1200); // Match fold animation duration
   };
 
   return (

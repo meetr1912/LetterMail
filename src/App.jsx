@@ -8,8 +8,9 @@ const EMAILS = [
   {
     id: 1,
     read: false,
-    sender: "Karl Architects",
-    address: "124 Bowery, NY",
+    sender: "Karl",
+    name: "Karl Architects",
+    address: "karl@karlarchitects.com",
     initials: "KA",
     stampColor: "bg-[#8B4513]",
     subject: "Sunday Plans",
@@ -28,7 +29,8 @@ Yours truly,`,
     id: 2,
     read: false,
     sender: "Elara Studio",
-    address: "44 West St, LDN",
+    name: "Elara Studio",
+    address: "hello@elarastudio.co.uk",
     initials: "ES",
     stampColor: "bg-[#2F4F4F]", 
     subject: "Draft Concept III",
@@ -46,8 +48,9 @@ Sincerely,`,
   {
     id: 3,
     read: true,
-    sender: "Mother",
-    address: "Vermont, USA",
+    sender: "Mom",
+    name: "Mother",
+    address: "mom@family.com",
     initials: "M",
     stampColor: "bg-[#556B2F]", 
     subject: "The Antique Table",
@@ -68,7 +71,8 @@ Love,`,
     id: 4,
     read: true,
     sender: "Gallery 42",
-    address: "Paris, FR",
+    name: "Gallery 42",
+    address: "info@gallery42.fr",
     initials: "G42",
     stampColor: "bg-[#800000]", 
     subject: "Exhibition Invite",
@@ -1416,7 +1420,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
             <div className="flex justify-between items-start relative z-10">
                 <div className="mt-2 ml-1">
                     <p className="font-serif text-[10px] uppercase tracking-widest text-stone-500 leading-relaxed">
-                        From: {data.sender}<br/>{data.address}
+                        From: {data.name || data.sender}<br/>{data.address}
                     </p>
                 </div>
                 <div className="transform rotate-3">
@@ -1482,7 +1486,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             {/* Letterhead */}
                             <div className="flex justify-between items-start mb-6">
                                 <div>
-                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
                                     <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
                                 </div>
                                 <div className="text-right">
@@ -1525,7 +1529,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             {/* Letterhead */}
                             <div className="flex justify-between items-start mb-6">
                                 <div>
-                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
                                     <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
                                 </div>
                                 <div className="text-right">
@@ -1568,7 +1572,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             {/* Letterhead */}
                             <div className="flex justify-between items-start mb-6">
                                 <div>
-                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
                                     <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
                                 </div>
                                 <div className="text-right">
@@ -1601,8 +1605,8 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                           {/* Letterhead */}
                           <div className="flex justify-between items-start mb-6">
                               <div>
-                                  <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
-                                  <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
+                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
                               </div>
                               <div className="text-right">
                                   <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
@@ -1630,7 +1634,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                           <button onClick={() => setReplyMode(false)} className="text-stone-400 hover:text-stone-800 mr-4">
                               <ArrowLeft size={18} />
                           </button>
-                          <p className="font-serif text-stone-600 italic">Replying to {data.sender}...</p>
+                          <p className="font-serif text-stone-600 italic">Replying to {data.name || data.sender}...</p>
                        </div>
                        <textarea 
                           className="flex-1 w-full bg-transparent px-20 py-12 font-serif text-lg leading-[36px] text-stone-800 outline-none resize-none placeholder:text-stone-300"

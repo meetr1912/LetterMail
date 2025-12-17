@@ -1222,11 +1222,12 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
             {/* Content Container - Wrap in sections when folding */}
             {isFolding ? (
               <>
-                {/* Section 3 (Top third) - Stays in place */}
-                <div className="paper-section paper-section-3">
+                {/* Section 3 (Top third) - Stays in place, receives folded sections */}
+                <div className="paper-section paper-section-3 bg-[#FCFAF5]">
                   <div className="flex-1 overflow-hidden relative z-10 h-full">
                     <div className="absolute inset-0 flex flex-col">
                       <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        {/* Letterhead */}
                         <div className="flex justify-between items-start mb-6">
                           <div>
                             <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
@@ -1236,43 +1237,81 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                             <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
                           </div>
                         </div>
+                        {/* Body */}
                         <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                          {data.body.split('\n\n').slice(0, 1).map((para, i) => (
-                            <p key={i} className="first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]">
+                          {data.body.split('\n\n').map((para, i) => (
+                            <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
                               {para}
                             </p>
                           ))}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Section 2 (Middle third) - Folds over top */}
-                <div className="paper-section paper-section-2">
-                  <div className="flex-1 overflow-hidden relative z-10 h-full">
-                    <div className="absolute inset-0 flex flex-col">
-                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
-                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                          {data.body.split('\n\n').slice(1, 2).map((para, i) => (
-                            <p key={i}>{para}</p>
-                          ))}
+                        {/* Signature */}
+                        <div className="mt-12 border-l border-stone-200">
+                          <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                          <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Section 1 (Bottom third) - Folds up first */}
-                <div className="paper-section paper-section-1">
+                {/* Section 2 (Middle third) - Folds over top, carrying section 1 */}
+                <div className="paper-section paper-section-2 bg-[#FCFAF5]">
                   <div className="flex-1 overflow-hidden relative z-10 h-full">
                     <div className="absolute inset-0 flex flex-col">
                       <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        {/* Letterhead */}
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                            <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                          </div>
+                        </div>
+                        {/* Body */}
                         <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                          {data.body.split('\n\n').slice(2).map((para, i) => (
-                            <p key={i}>{para}</p>
+                          {data.body.split('\n\n').map((para, i) => (
+                            <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                              {para}
+                            </p>
                           ))}
                         </div>
+                        {/* Signature */}
+                        <div className="mt-12 border-l border-stone-200">
+                          <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                          <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Section 1 (Bottom third) - Folds up first, then gets carried by section 2 */}
+                <div className="paper-section paper-section-1 bg-[#FCFAF5]">
+                  <div className="flex-1 overflow-hidden relative z-10 h-full">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        {/* Letterhead */}
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                            <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                          </div>
+                        </div>
+                        {/* Body */}
+                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                          {data.body.split('\n\n').map((para, i) => (
+                            <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
+                              {para}
+                            </p>
+                          ))}
+                        </div>
+                        {/* Signature */}
                         <div className="mt-12 border-l border-stone-200">
                           <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
                           <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>

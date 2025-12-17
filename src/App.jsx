@@ -697,53 +697,6 @@ const styles = `
   .folding-active .paper-section-3 {
     animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
-  /* Paper sections for tri-fold */
-  .paper-section {
-    position: absolute;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    background: transparent; /* Transparent so page background shows through when folded */
-  }
-  
-  .paper-section-1 {
-    /* Bottom third */
-    top: 66.66%;
-    height: 33.34%;
-    transform-origin: top center;
-    z-index: 1;
-  }
-  
-  .paper-section-2 {
-    /* Middle third */
-    top: 33.33%;
-    height: 33.33%;
-    transform-origin: top center;
-    z-index: 1;
-  }
-  
-  .paper-section-3 {
-    /* Top third */
-    top: 0%;
-    height: 33.33%;
-    transform-origin: bottom center;
-    z-index: 1;
-  }
-  
-  .folding-active .paper-section-1 {
-    animation: foldSection1 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .folding-active .paper-section-2 {
-    animation: foldSection2 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .folding-active .paper-section-3 {
-    animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
-  }
 
   /* Crease lines - Removed completely for clean fold effect */
   .folding-active::before {

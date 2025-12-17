@@ -101,15 +101,54 @@ const styles = `
     20% { opacity: 1; }
     100% { opacity: 0; transform: translate(-300px, -300px); }
   }
-  /* Intense Fire Overlay */
+  /* Realistic Fire Animations */
   @keyframes fireEngulf {
-    0% { transform: translateY(100%) scale(1) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    100% { transform: translateY(-80%) scale(2) rotate(-10deg); opacity: 0; }
+    0% { transform: translateY(100%) scale(0.8) rotate(0deg); opacity: 0; }
+    5% { opacity: 0.3; }
+    15% { opacity: 0.9; transform: translateY(50%) scale(1.2) rotate(-2deg); }
+    50% { opacity: 1; transform: translateY(-20%) scale(1.8) rotate(-5deg); }
+    100% { transform: translateY(-100%) scale(2.5) rotate(-8deg); opacity: 0.3; }
   }
+  
+  @keyframes flameFlicker {
+    0%, 100% { transform: scaleY(1) scaleX(1) translateX(0); opacity: 1; }
+    25% { transform: scaleY(1.1) scaleX(0.95) translateX(-2px); opacity: 0.9; }
+    50% { transform: scaleY(0.95) scaleX(1.05) translateX(2px); opacity: 1; }
+    75% { transform: scaleY(1.05) scaleX(0.98) translateX(-1px); opacity: 0.95; }
+  }
+  
+  @keyframes flameRise {
+    0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translateY(-30px) scale(1.2) rotate(-3deg); opacity: 0.9; }
+    100% { transform: translateY(-80px) scale(0.8) rotate(-6deg); opacity: 0; }
+  }
+  
+  @keyframes emberGlow {
+    0%, 100% { opacity: 0.8; transform: scale(1); filter: brightness(1); }
+    50% { opacity: 1; transform: scale(1.1); filter: brightness(1.3); }
+  }
+  
+  @keyframes emberFloat {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-40px, -120px) rotate(360deg); opacity: 0; }
+  }
+  
   @keyframes smokeRise {
-    0% { transform: translateY(0) scale(1); opacity: 0.5; }
-    100% { transform: translateY(-150px) scale(3); opacity: 0; }
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+    30% { transform: translateY(-40px) translateX(10px) scale(1.3); opacity: 0.8; }
+    100% { transform: translateY(-200px) translateX(30px) scale(2.5); opacity: 0; }
+  }
+  
+  @keyframes charSpread {
+    0% { transform: scale(0.5); opacity: 0; }
+    20% { opacity: 0.4; }
+    100% { transform: scale(1.5); opacity: 0.8; }
+  }
+  
+  @keyframes heatDistortion {
+    0%, 100% { transform: translateY(0) scaleY(1); }
+    50% { transform: translateY(-5px) scaleY(1.05); }
   }
   .burning-container {
     /* Create a jagged burn edge using a gradient mask */
@@ -192,60 +231,220 @@ const PostageStamp = ({ color, initials, isRead }) => (
   </div>
 );
 
-const RealisticFire = () => (
-  <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
-    {/* Base Orange Glow engulfing from bottom right */}
-    <div 
-      className="absolute w-[180%] h-[180%] bg-gradient-to-tl from-orange-600 via-red-900 to-transparent blur-md"
-      style={{ 
-        bottom: '-40%', 
-        right: '-40%',
-        animation: 'fireEngulf 2.5s forwards linear',
-        mixBlendMode: 'hard-light'
-      }}
-    ></div>
-    {/* Dark Charring Overlay */}
-    <div 
-      className="absolute w-[150%] h-[150%] bg-black blur-xl opacity-60"
-      style={{ 
-        bottom: '-30%', 
-        right: '-30%',
-        animation: 'fireEngulf 2.5s forwards linear 0.1s',
-      }}
-    ></div>
-    {/* Smoke Particles */}
-    {[...Array(8)].map((_, i) => (
-      <div
-        key={`smoke-${i}`}
-        className="absolute bg-stone-500 rounded-full blur-xl"
-        style={{
-          width: '60px',
-          height: '60px',
-          bottom: '0%',
-          right: `${Math.random() * 40}%`,
-          animation: `smokeRise 3s forwards ease-out ${i * 0.2}s`
-        }}
-      />
-    ))}
-    {/* Flame Particles */}
-    {[...Array(25)].map((_, i) => (
+const RealisticFire = () => {
+  // Generate consistent random values for particles
+  const getRandom = (seed, min, max) => {
+    const x = Math.sin(seed) * 10000;
+    return min + (x - Math.floor(x)) * (max - min);
+  };
+
+  return (
+    <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-sm">
+      {/* Heat Distortion Layer */}
       <div 
-        key={`fire-${i}`}
-        className="absolute bg-orange-400 rounded-full blur-md"
+        className="absolute inset-0 opacity-30"
         style={{
-          width: `${Math.random() * 50 + 20}px`,
-          height: `${Math.random() * 50 + 20}px`,
-          bottom: `${Math.random() * -30}%`,
-          right: `${Math.random() * 60}%`,
-          opacity: 0,
-          animation: `fireEngulf 2s forwards ease-in ${Math.random() * 0.5}s`,
-          transformOrigin: 'bottom right',
-          backgroundColor: i % 3 === 0 ? '#fbbf24' : '#ef4444' // Mix of yellow/orange/red
+          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,100,0,0.1) 40%, rgba(255,50,0,0.2) 60%)',
+          animation: 'heatDistortion 0.3s infinite ease-in-out',
+          mixBlendMode: 'overlay'
         }}
       />
-    ))}
-  </div>
-);
+      
+      {/* Base Fire Core - Intense orange/red center */}
+      <div 
+        className="absolute w-[200%] h-[200%]"
+        style={{ 
+          bottom: '-50%', 
+          right: '-50%',
+          background: 'radial-gradient(ellipse, #ff6b00 0%, #ff4500 25%, #dc2626 50%, #991b1b 75%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out',
+          mixBlendMode: 'hard-light',
+          filter: 'blur(20px)'
+        }}
+      />
+      
+      {/* Secondary Fire Layer - More spread */}
+      <div 
+        className="absolute w-[180%] h-[180%]"
+        style={{ 
+          bottom: '-40%', 
+          right: '-40%',
+          background: 'radial-gradient(ellipse, #ff8c00 0%, #ff6b00 30%, #ff4500 60%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out 0.15s',
+          mixBlendMode: 'screen',
+          filter: 'blur(15px)'
+        }}
+      />
+      
+      {/* Charring/Ash Layer - Dark center spreading */}
+      <div 
+        className="absolute w-[160%] h-[160%]"
+        style={{ 
+          bottom: '-30%', 
+          right: '-30%',
+          background: 'radial-gradient(ellipse, #000000 0%, #1a0000 30%, #330000 60%, transparent 100%)',
+          animation: 'charSpread 2.5s forwards ease-out',
+          mixBlendMode: 'multiply',
+          filter: 'blur(25px)',
+          opacity: 0.7
+        }}
+      />
+      
+      {/* Main Flame Shapes - Realistic flame forms */}
+      {[...Array(12)].map((_, i) => {
+        const delay = i * 0.08;
+        const rightOffset = getRandom(i, 20, 70);
+        const size = getRandom(i + 100, 40, 80);
+        const height = getRandom(i + 200, 60, 120);
+        
+        return (
+          <div
+            key={`flame-${i}`}
+            className="absolute"
+            style={{
+              width: `${size}px`,
+              height: `${height}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `linear-gradient(to top, 
+                #ffd700 0%, 
+                #ff8c00 20%, 
+                #ff4500 40%, 
+                #dc2626 60%, 
+                #991b1b 80%, 
+                transparent 100%)`,
+              clipPath: `polygon(${getRandom(i, 30, 70)}% 100%, ${getRandom(i+10, 0, 40)}% 80%, ${getRandom(i+20, 20, 60)}% 60%, ${getRandom(i+30, 40, 80)}% 40%, ${getRandom(i+40, 30, 70)}% 20%, ${getRandom(i+50, 45, 55)}% 0%)`,
+              animation: `flameRise 1.5s forwards ease-out ${delay}s, flameFlicker 0.4s infinite ease-in-out ${delay + 0.5}s`,
+              transformOrigin: 'bottom center',
+              filter: 'blur(2px)',
+              opacity: 0
+            }}
+          />
+        );
+      })}
+      
+      {/* Large Flame Tongues - Dramatic upward flames */}
+      {[...Array(8)].map((_, i) => {
+        const delay = i * 0.1 + 0.2;
+        const rightOffset = getRandom(i + 300, 25, 65);
+        const width = getRandom(i + 400, 50, 100);
+        const height = getRandom(i + 500, 100, 180);
+        
+        return (
+          <div
+            key={`tongue-${i}`}
+            className="absolute"
+            style={{
+              width: `${width}px`,
+              height: `${height}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `radial-gradient(ellipse at bottom, 
+                #ffd700 0%, 
+                #ff8c00 25%, 
+                #ff4500 50%, 
+                #dc2626 75%, 
+                transparent 100%)`,
+              clipPath: `polygon(${getRandom(i+600, 40, 60)}% 100%, ${getRandom(i+700, 20, 40)}% 70%, ${getRandom(i+800, 30, 50)}% 40%, ${getRandom(i+900, 40, 60)}% 10%, ${getRandom(i+1000, 45, 55)}% 0%)`,
+              animation: `flameRise 2s forwards ease-out ${delay}s, flameFlicker 0.5s infinite ease-in-out ${delay + 0.8}s`,
+              transformOrigin: 'bottom center',
+              filter: 'blur(3px)',
+              opacity: 0,
+              mixBlendMode: 'screen'
+            }}
+          />
+        );
+      })}
+      
+      {/* Ember Particles - Glowing hot embers */}
+      {[...Array(30)].map((_, i) => {
+        const delay = getRandom(i + 1000, 0, 1);
+        const rightOffset = getRandom(i + 1100, 15, 75);
+        const size = getRandom(i + 1200, 4, 12);
+        const duration = getRandom(i + 1300, 2, 4);
+        
+        return (
+          <div
+            key={`ember-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `radial-gradient(circle, #ffd700 0%, #ff8c00 50%, #ff4500 100%)`,
+              boxShadow: `0 0 ${size * 2}px #ff8c00, 0 0 ${size * 3}px #ff4500`,
+              animation: `emberFloat ${duration}s forwards ease-out ${delay}s, emberGlow 0.8s infinite ease-in-out ${delay + 0.3}s`,
+              opacity: 0
+            }}
+          />
+        );
+      })}
+      
+      {/* Smoke Particles - Multiple layers for depth */}
+      {[...Array(15)].map((_, i) => {
+        const delay = i * 0.15;
+        const rightOffset = getRandom(i + 2000, 20, 70);
+        const size = getRandom(i + 2100, 40, 100);
+        const duration = getRandom(i + 2200, 3, 5);
+        
+        return (
+          <div
+            key={`smoke-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `radial-gradient(circle, rgba(100,100,100,0.4) 0%, rgba(60,60,60,0.3) 50%, transparent 100%)`,
+              filter: 'blur(20px)',
+              animation: `smokeRise ${duration}s forwards ease-out ${delay}s`,
+              opacity: 0
+            }}
+          />
+        );
+      })}
+      
+      {/* Additional Smoke Wisp - Thin tendrils */}
+      {[...Array(10)].map((_, i) => {
+        const delay = i * 0.2 + 0.5;
+        const rightOffset = getRandom(i + 3000, 25, 65);
+        const width = getRandom(i + 3100, 30, 60);
+        const height = getRandom(i + 3200, 80, 150);
+        
+        return (
+          <div
+            key={`wisp-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${width}px`,
+              height: `${height}px`,
+              bottom: '0%',
+              right: `${rightOffset}%`,
+              background: `radial-gradient(ellipse, rgba(120,120,120,0.3) 0%, rgba(80,80,80,0.2) 50%, transparent 100%)`,
+              filter: 'blur(15px)',
+              animation: `smokeRise ${getRandom(i + 3300, 4, 6)}s forwards ease-out ${delay}s`,
+              opacity: 0,
+              transform: `rotate(${getRandom(i + 3400, -20, 20)}deg)`
+            }}
+          />
+        );
+      })}
+      
+      {/* Paper Edge Glow - Where fire touches paper */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, transparent 60%, rgba(255,140,0,0.3) 70%, rgba(255,69,0,0.5) 80%, rgba(220,38,38,0.4) 90%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out',
+          mixBlendMode: 'overlay',
+          filter: 'blur(8px)'
+        }}
+      />
+    </div>
+  );
+};
 
 // --- MAIN APP ---
 

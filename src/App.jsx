@@ -108,13 +108,13 @@ const styles = `
   /* Realistic Fire Animations - Enhanced */
   @keyframes fireEngulf {
     0% { transform: translateY(100%) scale(0.8) rotate(0deg); opacity: 0; }
-    3% { opacity: 0.2; }
-    8% { opacity: 0.5; transform: translateY(70%) scale(1.0) rotate(-1deg); }
-    15% { opacity: 0.9; transform: translateY(50%) scale(1.2) rotate(-2deg); }
-    30% { opacity: 1; transform: translateY(20%) scale(1.5) rotate(-3deg); }
-    50% { opacity: 1; transform: translateY(-20%) scale(1.8) rotate(-5deg); }
-    70% { opacity: 0.9; transform: translateY(-50%) scale(2.0) rotate(-6deg); }
-    100% { transform: translateY(-100%) scale(2.5) rotate(-8deg); opacity: 0.4; }
+    3% { opacity: 0.3; }
+    8% { opacity: 0.6; transform: translateY(50%) scale(1.2) rotate(-1deg); }
+    15% { opacity: 1; transform: translateY(20%) scale(1.5) rotate(-2deg); }
+    30% { opacity: 1; transform: translateY(-10%) scale(2.0) rotate(-3deg); }
+    50% { opacity: 1; transform: translateY(-40%) scale(2.5) rotate(-5deg); }
+    70% { opacity: 0.95; transform: translateY(-70%) scale(3.0) rotate(-6deg); }
+    100% { transform: translateY(-120%) scale(3.5) rotate(-8deg); opacity: 0.5; }
   }
   
   @keyframes flameFlicker {
@@ -132,14 +132,14 @@ const styles = `
   
   @keyframes flameRise {
     0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
-    3% { opacity: 0.3; }
-    8% { opacity: 1; transform: translateY(-5px) scale(1.05) rotate(-1deg); }
-    20% { transform: translateY(-20px) scale(1.15) rotate(-2deg); opacity: 0.95; }
-    40% { transform: translateY(-40px) scale(1.2) rotate(-3deg); opacity: 0.9; }
-    60% { transform: translateY(-60px) scale(1.1) rotate(-4deg); opacity: 0.85; }
-    80% { transform: translateY(-80px) scale(0.95) rotate(-5deg); opacity: 0.7; }
-    90% { transform: translateY(-90px) scale(0.85) rotate(-5.5deg); opacity: 0.5; }
-    100% { transform: translateY(-100px) scale(0.8) rotate(-6deg); opacity: 0.3; }
+    3% { opacity: 0.4; }
+    8% { opacity: 1; transform: translateY(-10px) scale(1.1) rotate(-1deg); }
+    20% { transform: translateY(-50px) scale(1.2) rotate(-2deg); opacity: 1; }
+    40% { transform: translateY(-150px) scale(1.3) rotate(-3deg); opacity: 0.95; }
+    60% { transform: translateY(-250px) scale(1.2) rotate(-4deg); opacity: 0.9; }
+    80% { transform: translateY(-350px) scale(1.1) rotate(-5deg); opacity: 0.8; }
+    90% { transform: translateY(-400px) scale(1.0) rotate(-5.5deg); opacity: 0.6; }
+    100% { transform: translateY(-500px) scale(0.9) rotate(-6deg); opacity: 0.4; }
   }
   
   @keyframes emberGlow {
@@ -636,7 +636,7 @@ const styles = `
 
   .folding-active {
     transform-origin: center bottom;
-    animation: foldContainer 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: foldContainer 1.57s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: visible;
     transform-style: preserve-3d;
@@ -687,15 +687,15 @@ const styles = `
   }
   
   .folding-active .paper-section-1 {
-    animation: foldSection1 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: foldSection1 1.57s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .folding-active .paper-section-2 {
-    animation: foldSection2 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: foldSection2 1.57s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .folding-active .paper-section-3 {
-    animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: foldSection3 1.57s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Crease lines - Removed completely for clean fold effect */
@@ -812,17 +812,19 @@ const RealisticFire = () => {
 
       {/* CSS-Only Fire Base Layer - Ultra realistic using glitter texture */}
       <div className="css-fire-base" style={{
-        transform: 'scale(1.5) translate(3%, 2%)',
-        transformOrigin: 'bottom right',
-        opacity: 1
+        transform: 'scale(2.5) translate(0%, 2%)',
+        transformOrigin: 'bottom center',
+        opacity: 1,
+        width: '100%',
+        left: '0%'
       }} />
       
       {/* Fire Base Glow - Like fireplace ember */}
       <div 
-        className="absolute w-[150%] h-[120%]"
+        className="absolute w-[200%] h-[120%]"
         style={{
           bottom: '-10%',
-          right: '-25%',
+          left: '-50%',
           background: 'radial-gradient(ellipse at center, rgba(255,140,0,0.6) 0%, rgba(255,69,0,0.4) 40%, transparent 70%)',
           borderRadius: '50%',
           filter: 'blur(8px)',
@@ -835,7 +837,7 @@ const RealisticFire = () => {
       <div 
         className="absolute inset-0 opacity-50"
         style={{
-          background: 'radial-gradient(ellipse at bottom right, transparent 0%, rgba(255,200,0,0.2) 25%, rgba(255,150,0,0.3) 40%, rgba(255,100,0,0.4) 60%, rgba(255,50,0,0.35) 80%)',
+          background: 'radial-gradient(ellipse at bottom center, transparent 0%, rgba(255,200,0,0.2) 25%, rgba(255,150,0,0.3) 40%, rgba(255,100,0,0.4) 60%, rgba(255,50,0,0.35) 80%)',
           animation: 'heatDistortion 0.2s infinite ease-in-out',
           mixBlendMode: 'overlay',
           filter: 'blur(3px)',
@@ -871,12 +873,12 @@ const RealisticFire = () => {
       />
       
       {/* Main Flame Shapes - More realistic with better colors */}
-      {[...Array(16)].map((_, i) => {
+      {[...Array(40)].map((_, i) => {
         // Reduced delay so flames appear together (max 0.3s spread instead of 0.96s)
-        const delay = i * 0.02;
-        const rightOffset = getRandom(i, 15, 75);
-        const size = getRandom(i + 100, 35, 85);
-        const height = getRandom(i + 200, 70, 140);
+        const delay = i * 0.015;
+        const rightOffset = getRandom(i, 0, 100);
+        const size = getRandom(i + 100, 50, 120);
+        const height = getRandom(i + 200, 150, 300);
         // Match burn duration (3s) so flames stay visible throughout
         const flameRiseDuration = 3.0;
         const totalTime = delay + flameRiseDuration;
@@ -912,12 +914,12 @@ const RealisticFire = () => {
       })}
       
       {/* Large Flame Tongues - Dramatic upward flames with more detail */}
-      {[...Array(10)].map((_, i) => {
+      {[...Array(30)].map((_, i) => {
         // Reduced delay for synchronized appearance
-        const delay = i * 0.03 + 0.1;
-        const rightOffset = getRandom(i + 300, 20, 70);
-        const width = getRandom(i + 400, 55, 110);
-        const height = getRandom(i + 500, 120, 200);
+        const delay = i * 0.02 + 0.05;
+        const rightOffset = getRandom(i + 300, 0, 100);
+        const width = getRandom(i + 400, 80, 180);
+        const height = getRandom(i + 500, 200, 400);
         // Match burn duration
         const flameRiseDuration = 3.0;
         
@@ -951,10 +953,10 @@ const RealisticFire = () => {
       })}
       
       {/* Ember Particles - Glowing hot embers with better physics */}
-      {[...Array(40)].map((_, i) => {
+      {[...Array(50)].map((_, i) => {
         // Start embers earlier and ensure they last through burn
         const delay = getRandom(i + 1000, 0, 0.5);
-        const rightOffset = getRandom(i + 1100, 10, 80);
+        const rightOffset = getRandom(i + 1100, 0, 100);
         const size = getRandom(i + 1200, 3, 14);
         // Ensure embers last at least 3s to match burn
         const duration = Math.max(3.0, getRandom(i + 1300, 2.5, 4.5));
@@ -985,10 +987,10 @@ const RealisticFire = () => {
       })}
       
       {/* Fire Particles - Realistic rising particles like fireplace */}
-      {[...Array(25)].map((_, i) => {
+      {[...Array(35)].map((_, i) => {
         // Start particles earlier and ensure they last
         const delay = getRandom(i + 2000, 0, 0.8);
-        const rightOffset = getRandom(i + 2100, 15, 80);
+        const rightOffset = getRandom(i + 2100, 0, 100);
         const size = getRandom(i + 2200, 30, 100);
         // Ensure particles last at least 3s
         const duration = Math.max(3.0, getRandom(i + 2300, 1.5, 3));
@@ -1019,9 +1021,9 @@ const RealisticFire = () => {
       })}
       
       {/* Spark Particles - Quick popping sparks like fireplace */}
-      {[...Array(30)].map((_, i) => {
+      {[...Array(40)].map((_, i) => {
         const delay = getRandom(i + 3000, 0.1, 1.8);
-        const rightOffset = getRandom(i + 3100, 20, 75);
+        const rightOffset = getRandom(i + 3100, 0, 100);
         const size = getRandom(i + 3200, 2, 5);
         const duration = getRandom(i + 3300, 0.3, 0.7);
         const sparkX = getRandom(i + 3400, -15, 15);
@@ -1048,9 +1050,9 @@ const RealisticFire = () => {
       })}
       
       {/* Smoke Particles - Realistic fireplace smoke */}
-      {[...Array(20)].map((_, i) => {
+      {[...Array(25)].map((_, i) => {
         const delay = i * 0.12;
-        const rightOffset = getRandom(i + 4000, 15, 80);
+        const rightOffset = getRandom(i + 4000, 0, 100);
         const size = getRandom(i + 4100, 30, 80);
         const duration = getRandom(i + 4200, 3, 6);
         const rotation = getRandom(i + 4300, -15, 15);
@@ -1076,9 +1078,9 @@ const RealisticFire = () => {
       })}
       
       {/* Additional Smoke Wisp - Thin tendrils like fireplace */}
-      {[...Array(12)].map((_, i) => {
+      {[...Array(16)].map((_, i) => {
         const delay = i * 0.15 + 0.3;
-        const rightOffset = getRandom(i + 5000, 20, 75);
+        const rightOffset = getRandom(i + 5000, 0, 100);
         const width = getRandom(i + 5100, 25, 50);
         const height = getRandom(i + 5200, 60, 120);
         
@@ -1110,6 +1112,30 @@ const RealisticFire = () => {
           animation: 'fireEngulf 2.5s forwards ease-out',
           mixBlendMode: 'overlay',
           filter: 'blur(8px)'
+        }}
+      />
+      
+      {/* Full-Width Bright Yellow Flame Overlay - Covers entire page */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to top, rgba(255,237,78,0.6) 0%, rgba(255,215,0,0.7) 15%, rgba(255,179,71,0.6) 30%, rgba(255,140,0,0.5) 50%, rgba(255,107,0,0.4) 70%, rgba(255,69,0,0.3) 85%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out',
+          mixBlendMode: 'screen',
+          filter: 'blur(3px)',
+          zIndex: 51
+        }}
+      />
+      
+      {/* Additional Bright Yellow Flame Layer - Extra coverage */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to top, rgba(255,237,78,0.5) 0%, rgba(255,215,0,0.6) 25%, rgba(255,179,71,0.4) 50%, rgba(255,140,0,0.3) 75%, transparent 100%)',
+          animation: 'fireEngulf 2.5s forwards ease-out',
+          mixBlendMode: 'screen',
+          filter: 'blur(5px)',
+          zIndex: 50
         }}
       />
     </div>
@@ -1287,12 +1313,12 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
         setReplyMode(false);
       }, 700);
     } else if (!isOpen && isFolding) {
-      // Wait for animation to complete (3.5s) plus a small buffer before resetting
+      // Wait for animation to complete (1.57s) plus a small buffer before resetting
       setTimeout(() => {
         setIsFolding(false);
         setIsBurning(false);
         setReplyMode(false);
-      }, 3600);
+      }, 1650);
     }
   }, [isOpen, isFolding, data.id]);
 
@@ -1314,7 +1340,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     const startTime = Date.now();
     const checkRotation = () => {
       const elapsed = (Date.now() - startTime) / 1000;
-      const progress = Math.min(elapsed / 3.5, 1);
+      const progress = Math.min(elapsed / 1.57, 1);
       // Section 1: 0deg -> 180deg (starts immediately)
       const rot1 = progress * 180;
       // Section 2: starts at 50%, 0deg -> 140deg
@@ -1332,7 +1358,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     requestAnimationFrame(checkRotation);
     setTimeout(() => {
         onClose();
-    }, 3500); // Match fold animation duration (3.5s)
+    }, 1570); // Match fold animation duration (1.57s)
   };
 
   const handleReplyClick = (e) => {
@@ -1347,7 +1373,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 3500); // Match fold animation duration (3.5s)
+    }, 1570); // Match fold animation duration (1.57s)
   };
 
   return (

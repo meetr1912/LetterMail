@@ -344,91 +344,127 @@ const styles = `
       mask-size: 150% 150%;
     }
   }
-  /* --- FOLD ANIMATION (ACCURATE TRI-FOLD) --- */
+  /* --- FOLD ANIMATION (REALISTIC TRI-FOLD WITH SECTIONS) --- */
   
-  /* Realistic tri-fold: paper folds into three equal sections */
-  @keyframes fold3D {
+  /* Container animation - stays in place, doesn't fall backwards */
+  @keyframes foldContainer {
     0% { 
-      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0) scale(1); 
-      opacity: 1; 
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+      transform: perspective(1200px) translateY(0) translateZ(0) rotateX(0deg); 
     }
-    /* Gentle lift */
-    5% { 
-      transform: perspective(1200px) rotateX(2deg) rotateY(0deg) translateY(-3px) translateZ(5px) scale(1.005); 
-      opacity: 1;
-      box-shadow: 0 26px 52px -11px rgba(0,0,0,0.26);
+    10% { 
+      transform: perspective(1200px) translateY(-3px) translateZ(2px) rotateX(1deg); 
     }
-    /* First crease forms - bottom third starts folding */
-    18% { 
-      transform: perspective(1200px) rotateX(8deg) rotateY(-0.5deg) translateY(-1px) translateZ(3px) scale(0.995); 
-      opacity: 1;
-      box-shadow: 0 23px 46px -9px rgba(0,0,0,0.24);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 100% 100%, 0% 100%, 0% 66.66%);
-    }
-    /* First fold - bottom third folds up */
-    32% { 
-      transform: perspective(1200px) rotateX(20deg) rotateY(-1deg) translateY(2px) translateZ(-2px) scale(0.97); 
-      opacity: 1;
-      box-shadow: 0 19px 40px -7px rgba(0,0,0,0.22);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 95% 70%, 5% 70%, 0% 66.66%);
-    }
-    /* First fold complete - bottom third folded */
-    42% { 
-      transform: perspective(1200px) rotateX(28deg) rotateY(-1.5deg) translateY(8px) translateZ(-8px) scale(0.94); 
-      opacity: 1;
-      box-shadow: 0 16px 35px -6px rgba(0,0,0,0.21);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 66.66%, 98% 68%, 2% 68%, 0% 66.66%);
-    }
-    /* Second crease forms - middle third starts folding */
-    55% { 
-      transform: perspective(1200px) rotateX(42deg) rotateY(-2deg) translateY(18px) translateZ(-18px) scale(0.88); 
-      opacity: 1;
-      box-shadow: 0 13px 28px -5px rgba(0,0,0,0.19);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 98% 35%, 2% 35%, 0% 33.33%, 0% 66.66%, 2% 68%, 98% 68%, 100% 66.66%);
-    }
-    /* Second fold - middle third folds */
-    68% { 
-      transform: perspective(1200px) rotateX(58deg) rotateY(-2deg) translateY(35px) translateZ(-28px) scale(0.82); 
-      opacity: 0.98;
-      box-shadow: 0 11px 23px -4px rgba(0,0,0,0.17);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 99% 34%, 1% 34%, 0% 33.33%, 0% 66.66%, 1% 67%, 99% 67%, 100% 66.66%);
-    }
-    /* Tri-fold complete - all three sections folded */
-    78% { 
-      transform: perspective(1200px) rotateX(68deg) rotateY(-1.5deg) translateY(55px) translateZ(-40px) scale(0.78); 
-      opacity: 0.96;
-      box-shadow: 0 9px 19px -3px rgba(0,0,0,0.15);
-      clip-path: polygon(0% 0%, 100% 0%, 100% 33.33%, 99.5% 33.5%, 0.5% 33.5%, 0% 33.33%, 0% 66.66%, 0.5% 66.5%, 99.5% 66.5%, 100% 66.66%);
-    }
-    /* Moving away */
-    88% { 
-      transform: perspective(1200px) rotateX(78deg) rotateY(-1deg) translateY(100px) translateZ(-55px) scale(0.70); 
-      opacity: 0.85;
-      box-shadow: 0 6px 13px -2px rgba(0,0,0,0.12);
+    50% { 
+      transform: perspective(1200px) translateY(-2px) translateZ(3px) rotateX(0deg); 
     }
     100% { 
-      transform: perspective(1200px) rotateX(88deg) rotateY(0deg) translateY(300px) translateZ(-80px) scale(0.65); 
-      opacity: 0; 
-      box-shadow: 0 0 0 0 transparent;
+      transform: perspective(1200px) translateY(0) translateZ(0) rotateX(0deg); 
+    }
+  }
+  
+  /* Section 1 (Bottom third) - Folds UP and lays flat on middle section */
+  @keyframes foldSection1 {
+    0% { 
+      transform: rotateX(0deg) translateY(0) translateZ(0) scaleY(1);
+      z-index: 1;
+    }
+    10% { 
+      transform: rotateX(10deg) translateY(-2px) translateZ(2px) scaleY(0.98);
+      z-index: 1;
+    }
+    20% { 
+      transform: rotateX(25deg) translateY(-5px) translateZ(5px) scaleY(0.96);
+      z-index: 2;
+    }
+    35% { 
+      transform: rotateX(50deg) translateY(-10px) translateZ(8px) scaleY(0.94);
+      z-index: 2;
+    }
+    50% { 
+      transform: rotateX(75deg) translateY(-15px) translateZ(10px) scaleY(0.92);
+      z-index: 3;
+    }
+    65% { 
+      transform: rotateX(100deg) translateY(-20px) translateZ(12px) scaleY(0.90);
+      z-index: 3;
+    }
+    80% { 
+      transform: rotateX(130deg) translateY(-25px) translateZ(15px) scaleY(0.88);
+      z-index: 3;
+    }
+    95% { 
+      transform: rotateX(165deg) translateY(-30px) translateZ(18px) scaleY(0.86);
+      z-index: 3;
+    }
+    100% { 
+      transform: rotateX(180deg) translateY(-33.34%) translateZ(20px) scaleY(0.85);
+      z-index: 3;
+    }
+  }
+  
+  /* Section 2 (Middle third) - Folds OVER top section, carrying section 1 with it */
+  @keyframes foldSection2 {
+    0% { 
+      transform: rotateX(0deg) translateY(0) translateZ(0) scaleY(1);
+      z-index: 1;
+    }
+    50% { 
+      transform: rotateX(0deg) translateY(0) translateZ(0) scaleY(1);
+      z-index: 1;
+    }
+    55% { 
+      transform: rotateX(5deg) translateY(-1px) translateZ(2px) scaleY(0.99);
+      z-index: 1;
+    }
+    60% { 
+      transform: rotateX(12deg) translateY(-3px) translateZ(4px) scaleY(0.98);
+      z-index: 2;
+    }
+    70% { 
+      transform: rotateX(35deg) translateY(-8px) translateZ(7px) scaleY(0.96);
+      z-index: 2;
+    }
+    80% { 
+      transform: rotateX(65deg) translateY(-15px) translateZ(10px) scaleY(0.94);
+      z-index: 2;
+    }
+    90% { 
+      transform: rotateX(100deg) translateY(-22px) translateZ(13px) scaleY(0.92);
+      z-index: 2;
+    }
+    95% { 
+      transform: rotateX(130deg) translateY(-28px) translateZ(16px) scaleY(0.90);
+      z-index: 2;
+    }
+    100% { 
+      transform: rotateX(180deg) translateY(-33.33%) translateZ(20px) scaleY(0.88);
+      z-index: 2;
+    }
+  }
+  
+  /* Section 3 (Top third) - Stays in place, receives folded sections on top */
+  @keyframes foldSection3 {
+    0% { 
+      transform: rotateX(0deg) translateY(0) translateZ(0) scaleY(1);
+      z-index: 1;
+    }
+    100% { 
+      transform: rotateX(0deg) translateY(0) translateZ(0) scaleY(1);
+      z-index: 1;
     }
   }
 
   /* Animate shadow creases appearing as the paper bends - visible tri-fold creases */
   @keyframes creaseAppear {
     0% { opacity: 0; transform: scaleX(0.98); }
-    15% { opacity: 0.2; transform: scaleX(0.99); }
-    18% { opacity: 0.4; transform: scaleX(1); }
-    25% { opacity: 0.6; transform: scaleX(1.01); }
-    32% { opacity: 0.75; transform: scaleX(1.02); }
-    42% { opacity: 0.85; transform: scaleX(1.03); }
-    50% { opacity: 0.7; transform: scaleX(1.01); }
-    55% { opacity: 0.8; transform: scaleX(1.02); }
-    65% { opacity: 0.9; transform: scaleX(1.03); }
-    78% { opacity: 1; transform: scaleX(1.05); }
-    88% { opacity: 0.95; transform: scaleX(1.06); }
-    100% { opacity: 0.9; transform: scaleX(1.08); }
+    10% { opacity: 0.3; transform: scaleX(0.99); }
+    15% { opacity: 0.5; transform: scaleX(1); }
+    20% { opacity: 0.7; transform: scaleX(1.01); }
+    30% { opacity: 0.85; transform: scaleX(1.02); }
+    45% { opacity: 1; transform: scaleX(1.03); }
+    60% { opacity: 1; transform: scaleX(1.04); }
+    75% { opacity: 1; transform: scaleX(1.05); }
+    100% { opacity: 1; transform: scaleX(1.06); }
   }
   
   /* Second crease animation - appears later */
@@ -437,17 +473,64 @@ const styles = `
     50% { opacity: 0.2; transform: scaleX(0.99); }
     55% { opacity: 0.4; transform: scaleX(1); }
     60% { opacity: 0.6; transform: scaleX(1.01); }
-    68% { opacity: 0.75; transform: scaleX(1.02); }
-    78% { opacity: 0.9; transform: scaleX(1.03); }
-    88% { opacity: 1; transform: scaleX(1.05); }
-    100% { opacity: 0.95; transform: scaleX(1.06); }
+    65% { opacity: 0.75; transform: scaleX(1.02); }
+    75% { opacity: 0.9; transform: scaleX(1.03); }
+    85% { opacity: 1; transform: scaleX(1.04); }
+    100% { opacity: 1; transform: scaleX(1.05); }
   }
 
   .folding-active {
-    transform-origin: center bottom;
-    animation: fold3D 3s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+    animation: foldContainer 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: visible;
+    transform-style: preserve-3d;
+  }
+  
+  /* Paper sections for tri-fold */
+  .paper-section {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .paper-section-1 {
+    /* Bottom third - folds up from top edge */
+    top: 66.66%;
+    height: 33.34%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-2 {
+    /* Middle third - folds over from top edge, carrying section 1 */
+    top: 33.33%;
+    height: 33.33%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .paper-section-3 {
+    /* Top third - stays in place, receives folded sections */
+    top: 0%;
+    height: 33.33%;
+    transform-origin: top center;
+    z-index: 1;
+  }
+  
+  .folding-active .paper-section-1 {
+    animation: foldSection1 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-2 {
+    animation: foldSection2 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .folding-active .paper-section-3 {
+    animation: foldSection3 3.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Crease lines with bevel effect - First crease at 2/3 mark (bottom section folds up) */
@@ -457,26 +540,26 @@ const styles = `
     left: 0;
     right: 0;
     top: 66.66%;
-    height: 3px;
+    height: 4px;
     pointer-events: none;
-    z-index: 100;
+    z-index: 200;
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(0,0,0,0.2) 8%,
-      rgba(0,0,0,0.35) 20%,
-      rgba(0,0,0,0.4) 50%,
-      rgba(0,0,0,0.35) 80%,
-      rgba(0,0,0,0.2) 92%,
+      rgba(0,0,0,0.25) 8%,
+      rgba(0,0,0,0.4) 20%,
+      rgba(0,0,0,0.5) 50%,
+      rgba(0,0,0,0.4) 80%,
+      rgba(0,0,0,0.25) 92%,
       transparent 100%
     );
     box-shadow: 
-      0 2px 3px rgba(0,0,0,0.15) inset,
-      0 -2px 2px rgba(255,255,255,0.4) inset,
-      0 0 4px rgba(0,0,0,0.1);
-    animation: creaseAppear 3s forwards ease-in;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+      0 3px 4px rgba(0,0,0,0.2) inset,
+      0 -3px 3px rgba(255,255,255,0.5) inset,
+      0 0 6px rgba(0,0,0,0.15);
+    animation: creaseAppear 3.5s forwards ease-in;
+    border-top: 2px solid rgba(0,0,0,0.15);
+    border-bottom: 2px solid rgba(255,255,255,0.3);
   }
 
   /* Second crease at 1/3 mark (middle section folds) - appears later */
@@ -486,26 +569,26 @@ const styles = `
     left: 0;
     right: 0;
     top: 33.33%;
-    height: 3px;
+    height: 4px;
     pointer-events: none;
-    z-index: 100;
+    z-index: 200;
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(0,0,0,0.2) 8%,
-      rgba(0,0,0,0.35) 20%,
-      rgba(0,0,0,0.4) 50%,
-      rgba(0,0,0,0.35) 80%,
-      rgba(0,0,0,0.2) 92%,
+      rgba(0,0,0,0.25) 8%,
+      rgba(0,0,0,0.4) 20%,
+      rgba(0,0,0,0.5) 50%,
+      rgba(0,0,0,0.4) 80%,
+      rgba(0,0,0,0.25) 92%,
       transparent 100%
     );
     box-shadow: 
-      0 2px 3px rgba(0,0,0,0.15) inset,
-      0 -2px 2px rgba(255,255,255,0.4) inset,
-      0 0 4px rgba(0,0,0,0.1);
-    animation: creaseAppearSecond 3s forwards ease-in;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+      0 3px 4px rgba(0,0,0,0.2) inset,
+      0 -3px 3px rgba(255,255,255,0.5) inset,
+      0 0 6px rgba(0,0,0,0.15);
+    animation: creaseAppearSecond 3.5s forwards ease-in;
+    border-top: 2px solid rgba(0,0,0,0.15);
+    border-bottom: 2px solid rgba(255,255,255,0.3);
   }
   
   /* Custom Scrollbar */
@@ -1043,7 +1126,8 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 3000); // Match fold animation duration (3s)
+        onArchive();
+    }, 3500); // Match fold animation duration (3.5s)
   };
 
   const handleReplyClick = (e) => {
@@ -1058,7 +1142,8 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 3000); // Match fold animation duration (3s)
+        onArchive();
+    }, 3500); // Match fold animation duration (3.5s)
   };
 
   return (
@@ -1134,8 +1219,71 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                  }}>
             </div>
 
-            {/* Content Container (Main Letter or Reply UI) */}
-            <div className="flex-1 overflow-hidden relative z-10">
+            {/* Content Container - Wrap in sections when folding */}
+            {isFolding ? (
+              <>
+                {/* Section 3 (Top third) - Stays in place */}
+                <div className="paper-section paper-section-3">
+                  <div className="flex-1 overflow-hidden relative z-10 h-full">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.sender}</h2>
+                            <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
+                          </div>
+                        </div>
+                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                          {data.body.split('\n\n').slice(0, 1).map((para, i) => (
+                            <p key={i} className="first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]">
+                              {para}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Section 2 (Middle third) - Folds over top */}
+                <div className="paper-section paper-section-2">
+                  <div className="flex-1 overflow-hidden relative z-10 h-full">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                          {data.body.split('\n\n').slice(1, 2).map((para, i) => (
+                            <p key={i}>{para}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Section 1 (Bottom third) - Folds up first */}
+                <div className="paper-section paper-section-1">
+                  <div className="flex-1 overflow-hidden relative z-10 h-full">
+                    <div className="absolute inset-0 flex flex-col">
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-20 py-16">
+                        <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
+                          {data.body.split('\n\n').slice(2).map((para, i) => (
+                            <p key={i}>{para}</p>
+                          ))}
+                        </div>
+                        <div className="mt-12 border-l border-stone-200">
+                          <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
+                          <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 overflow-hidden relative z-10">
                 
                 {/* 1. READING MODE */}
                 <div className={`absolute inset-0 flex flex-col transition-transform duration-500 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`}>
@@ -1198,9 +1346,10 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                      </div>
                 </div>
             </div>
+            )}
 
-            {/* Bottom Toolbar (Only visible in Read Mode) */}
-            <div className={`h-16 border-t border-stone-100 bg-[#FCFAF5] flex items-center justify-center gap-8 shrink-0 z-20 transition-all duration-300 ${replyMode ? 'opacity-0 pointer-events-none translate-y-full' : 'opacity-100 translate-y-0'}`}>
+            {/* Bottom Toolbar (Only visible in Read Mode and not folding) */}
+            <div className={`h-16 border-t border-stone-100 bg-[#FCFAF5] flex items-center justify-center gap-8 shrink-0 z-20 transition-all duration-300 ${replyMode || isFolding ? 'opacity-0 pointer-events-none translate-y-full' : 'opacity-100 translate-y-0'}`}>
                 <button 
                   onClick={handleFoldClick} 
                   className="flex flex-col items-center gap-1 group text-stone-400 hover:text-stone-800 transition-colors cursor-pointer"

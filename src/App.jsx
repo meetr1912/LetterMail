@@ -315,9 +315,9 @@ const styles = `
   .burning-active {
     animation: burnMask 2.5s forwards linear;
   }
-  /* --- FOLD ANIMATION (REALISTIC PAPER FOLD) --- */
+  /* --- FOLD ANIMATION (REALISTIC PAPER FOLD - SLOW TRI-FOLD) --- */
   
-  /* Simulates realistic paper folding - smooth, clean creases */
+  /* Simulates realistic paper folding - slow enough to see tri-fold creases */
   @keyframes fold3D {
     0% { 
       transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0) scale(1); 
@@ -325,34 +325,46 @@ const styles = `
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
     }
     /* Gentle lift - like picking up paper */
-    10% { 
+    8% { 
       transform: perspective(1200px) rotateX(3deg) rotateY(0deg) translateY(-5px) translateZ(10px) scale(1.01); 
       opacity: 1;
       box-shadow: 0 28px 55px -10px rgba(0,0,0,0.28);
     }
-    /* Start folding - paper begins to crease */
-    25% { 
-      transform: perspective(1200px) rotateX(15deg) rotateY(-2deg) translateY(0px) translateZ(5px) scale(0.98); 
+    /* First crease appears - bottom third folds up */
+    20% { 
+      transform: perspective(1200px) rotateX(12deg) rotateY(-1deg) translateY(-2px) translateZ(8px) scale(0.99); 
       opacity: 1;
-      box-shadow: 0 20px 40px -8px rgba(0,0,0,0.22);
+      box-shadow: 0 22px 45px -8px rgba(0,0,0,0.24);
     }
-    /* Mid-fold - paper is creasing */
-    40% { 
-      transform: perspective(1200px) rotateX(35deg) rotateY(-3deg) translateY(15px) translateZ(-10px) scale(0.92); 
+    /* First fold complete - bottom third is folded */
+    35% { 
+      transform: perspective(1200px) rotateX(25deg) rotateY(-2deg) translateY(5px) translateZ(0px) scale(0.96); 
       opacity: 1;
-      box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2);
+      box-shadow: 0 18px 38px -6px rgba(0,0,0,0.22);
     }
-    /* Folded - paper is now in tri-fold position */
-    60% { 
-      transform: perspective(1200px) rotateX(60deg) rotateY(-2deg) translateY(50px) translateZ(-30px) scale(0.85); 
+    /* Second crease appears - middle third starts folding */
+    50% { 
+      transform: perspective(1200px) rotateX(40deg) rotateY(-3deg) translateY(20px) translateZ(-15px) scale(0.90); 
+      opacity: 1;
+      box-shadow: 0 14px 30px -4px rgba(0,0,0,0.2);
+    }
+    /* Second fold complete - tri-fold position achieved */
+    65% { 
+      transform: perspective(1200px) rotateX(55deg) rotateY(-2deg) translateY(40px) translateZ(-25px) scale(0.85); 
+      opacity: 0.98;
+      box-shadow: 0 12px 25px -3px rgba(0,0,0,0.18);
+    }
+    /* Fully folded - tri-fold complete, holding position */
+    75% { 
+      transform: perspective(1200px) rotateX(65deg) rotateY(-2deg) translateY(60px) translateZ(-35px) scale(0.80); 
       opacity: 0.95;
       box-shadow: 0 10px 20px -3px rgba(0,0,0,0.15);
     }
     /* Moving away - folded paper slides down */
-    80% { 
-      transform: perspective(1200px) rotateX(75deg) rotateY(-1deg) translateY(150px) translateZ(-50px) scale(0.75); 
-      opacity: 0.7;
-      box-shadow: 0 5px 10px -2px rgba(0,0,0,0.1);
+    85% { 
+      transform: perspective(1200px) rotateX(75deg) rotateY(-1deg) translateY(120px) translateZ(-50px) scale(0.72); 
+      opacity: 0.8;
+      box-shadow: 0 6px 12px -2px rgba(0,0,0,0.12);
     }
     100% { 
       /* Final position - paper is folded and moved away */
@@ -362,19 +374,25 @@ const styles = `
     }
   }
 
-  /* Animate shadow creases appearing as the paper bends */
+  /* Animate shadow creases appearing as the paper bends - slow and visible */
   @keyframes creaseAppear {
-    0% { opacity: 0; transform: scaleX(0.9); }
-    20% { opacity: 0.2; transform: scaleX(0.95); }
-    30% { opacity: 0.5; transform: scaleX(1); }
-    50% { opacity: 0.8; transform: scaleX(1); }
-    70% { opacity: 0.9; transform: scaleX(1.05); }
-    100% { opacity: 0.6; transform: scaleX(1.1); }
+    0% { opacity: 0; transform: scaleX(0.95); }
+    15% { opacity: 0.1; transform: scaleX(0.97); }
+    20% { opacity: 0.3; transform: scaleX(0.98); }
+    25% { opacity: 0.5; transform: scaleX(1); }
+    30% { opacity: 0.7; transform: scaleX(1); }
+    40% { opacity: 0.85; transform: scaleX(1.02); }
+    50% { opacity: 0.9; transform: scaleX(1.03); }
+    60% { opacity: 0.95; transform: scaleX(1.05); }
+    70% { opacity: 1; transform: scaleX(1.06); }
+    80% { opacity: 0.95; transform: scaleX(1.08); }
+    90% { opacity: 0.9; transform: scaleX(1.1); }
+    100% { opacity: 0.85; transform: scaleX(1.12); }
   }
 
   .folding-active {
     transform-origin: center bottom;
-    animation: fold3D 1.2s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fold3D 2.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
   }
 
@@ -399,7 +417,7 @@ const styles = `
     box-shadow: 
       0 1px 2px rgba(0,0,0,0.1) inset,
       0 -1px 1px rgba(255,255,255,0.3) inset;
-    animation: creaseAppear 1.2s forwards ease-in;
+    animation: creaseAppear 2.5s forwards ease-in;
   }
 
   /* Second crease at 2/3 mark - tri-fold effect */
@@ -961,7 +979,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setIsFolding(true); // Triggers the 3D fold animation
     setTimeout(() => {
         onClose();
-    }, 1200); // Match fold animation duration
+    }, 2500); // Match fold animation duration (2.5s)
   };
 
   const handleReplyClick = (e) => {
@@ -976,7 +994,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
     setTimeout(() => {
         setReplyMode(false);
         onClose();
-    }, 1200); // Match fold animation duration
+    }, 2500); // Match fold animation duration (2.5s)
   };
 
   return (

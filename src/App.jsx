@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Search, PenTool, X, Flame, Reply, Send, ArrowLeft, Cloud } from 'lucide-react';
 
@@ -1264,7 +1264,6 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
   const [isFolding, setIsFolding] = useState(false);
   const [replyMode, setReplyMode] = useState(false);
   const [replyText, setReplyText] = useState("");
-  const foldAnimationStartRef = useRef(null);
   const [section1Rotation, setSection1Rotation] = useState(0);
   const [section2Rotation, setSection2Rotation] = useState(0);
 
@@ -1446,12 +1445,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                   {/* Section 3 (Top third) - Stays visible, shows top portion of content */}
                   <div className="paper-section paper-section-3">
                     {/* Inner Paper Texture and Background for this section */}
-                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(0)', background: '#FCFAF5' }} ref={(el) => {
-                      if (el) {
-                        const rect = el.getBoundingClientRect();
-                        fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1426',message:'Section 3 content wrapper',data:{section:'section-3',wrapperHeight:rect.height,wrapperTop:rect.top,translateY:'0',hasFullContent:true,section1Rot:section1Rotation,section2Rot:section2Rotation,alwaysVisible:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-                      }
-                    }}>
+                    <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(0)', background: '#FCFAF5' }}>
                         {/* Paper Texture Overlay */}
                         <div className="absolute inset-0 pointer-events-none z-0" 
                              style={{ 
@@ -1464,7 +1458,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                              }}>
                         </div>
                         <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%' }}>
-                            {/* Letterhead */}
+                            {/* Section 3: Top third - Only show letterhead */}
                             <div className="flex justify-between items-start mb-6">
                                 <div>
                                     <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
@@ -1473,19 +1467,6 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                                 <div className="text-right">
                                     <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
                                 </div>
-                            </div>
-                            {/* Body */}
-                            <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                                {data.body.split('\n\n').map((para, i) => (
-                                    <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
-                                        {para}
-                                    </p>
-                                ))}
-                            </div>
-                            {/* Signature */}
-                            <div className="mt-12 border-l border-stone-200">
-                                <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
-                                <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
                             </div>
                         </div>
                     </div>
@@ -1508,17 +1489,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                              }}>
                         </div>
                         <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%', marginTop: '33.33%' }}>
-                            {/* Letterhead */}
-                            <div className="flex justify-between items-start mb-6">
-                                <div>
-                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
-                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
-                                </div>
-                            </div>
-                            {/* Body */}
+                            {/* Section 2: Middle third - Only show body */}
                             <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
                                 {data.body.split('\n\n').map((para, i) => (
                                     <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
@@ -1526,18 +1497,19 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                                     </p>
                                 ))}
                             </div>
-                            {/* Signature */}
-                            <div className="mt-12 border-l border-stone-200">
-                                <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
-                                <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
-                            </div>
                         </div>
                     </div>
                     )}
                   </div>
                   
                   {/* Section 1 (Bottom third) - Folds up and over, shows bottom portion */}
-                  <div className="paper-section paper-section-1">
+                  <div className="paper-section paper-section-1" ref={(el) => {
+                    if (el) {
+                      const rect = el.getBoundingClientRect();
+                      const styles = window.getComputedStyle(el);
+                      fetch('http://127.0.0.1:7243/ingest/c420055f-0ac1-4ba2-a305-7906b9080a6d',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:1510',message:'Section 1 rendered',data:{section:'section-1',top:rect.top,height:rect.height,overflow:styles.overflow,transform:styles.transform,visibility:styles.visibility},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                    }
+                  }}>
                     {/* Inner Paper Texture and Background for this section */}
                     {section1Rotation <= 90 && (
                     <div className={`absolute left-0 right-0 flex flex-col transition-transform duration-500 z-10 ${replyMode ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'}`} style={{ top: 0, height: '300%', transform: 'translateY(-66.66%)', background: '#FCFAF5' }}>
@@ -1553,25 +1525,7 @@ const Envelope = ({ data, isOpen, onClose, onArchive }) => {
                              }}>
                         </div>
                         <div className="w-full px-20 py-16 relative z-10" style={{ height: '33.33%', marginTop: '66.66%' }}>
-                            {/* Letterhead */}
-                            <div className="flex justify-between items-start mb-6">
-                                <div>
-                                    <h2 className="font-serif text-2xl text-stone-900 font-bold tracking-tight">{data.name || data.sender}</h2>
-                                    <p className="text-[10px] font-sans uppercase tracking-widest text-stone-400 mt-1">{data.address}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-serif text-sm italic text-stone-500">{data.date}, 2024</p>
-                                </div>
-                            </div>
-                            {/* Body */}
-                            <div className="font-serif text-lg leading-[36px] text-stone-800 space-y-9 relative">
-                                {data.body.split('\n\n').map((para, i) => (
-                                    <p key={i} className={i === 0 ? "first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-[-4px]" : ""}>
-                                        {para}
-                                    </p>
-                                ))}
-                            </div>
-                            {/* Signature */}
+                            {/* Section 1: Bottom third - Only show signature */}
                             <div className="mt-12 border-l border-stone-200">
                                 <p className="font-serif italic text-stone-500 mb-4 pl-4">Warm regards,</p>
                                 <p className="font-[cursive] text-3xl text-stone-900 transform -rotate-2 origin-left opacity-90 pl-4">{data.signature}</p>
